@@ -1,0 +1,45 @@
+# Environment & Secrets
+.env.backup
+.env
+.env.production
+auth.json
+
+# Dependencies
+/vendor
+/node_modules
+
+# Build & Generated Assets
+/public/build
+/public/hot
+/public/storage
+/public/fonts-manifest.dev.json
+
+# Storage & Runtime
+*.log
+/storage/*.key
+/storage/pail
+
+# IDE & Editor
+/.idea
+/.vscode
+/.cursor/
+/.zed
+/.nova
+/.codex
+
+# PHP Tools & Cache
+.phpactor.json
+.phpunit.result.cache
+/.phpunit.cache
+_ide_helper.php
+
+# Local Development
+Homestead.yaml
+Homestead.json
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# AI Agent Context
+.knowledge-base/

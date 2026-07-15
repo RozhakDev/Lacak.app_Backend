@@ -1,0 +1,37 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Lacak.app API Documentation",
+        "description": "Dokumentasi REST API untuk Lacak.app Backend",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/api/health": {
+            "get": {
+                "tags": [
+                    "System"
+                ],
+                "summary": "Pemeriksaan Kesehatan API",
+                "description": "Mengembalikan status operasional API Lacak.app beserta informasi runtime yang digunakan untuk pemantauan layanan, diagnosis sistem, dan verifikasi ketersediaan API.",
+                "operationId": "da6d191bd3c165491ca6dbec524e15f1",
+                "responses": {
+                    "200": {
+                        "description": "API berhasil berjalan dan siap menerima permintaan."
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "System",
+            "description": "System"
+        }
+    ]
+}
