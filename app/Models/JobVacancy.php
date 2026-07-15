@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class JobVacancy extends Model
+{
+    use SoftDeletes;
+
+    protected $fillable = [
+        'created_by',
+        'title',
+        'company_name',
+        'description',
+        'requirements',
+        'is_active',
+        'expires_at',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+            'expires_at' => 'date',
+        ];
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+}
