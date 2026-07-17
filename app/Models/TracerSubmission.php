@@ -24,7 +24,7 @@ class TracerSubmission extends Model
 
     public function alumniProfile()
     {
-        return $this->belongsTo(alumniProfile::class);
+        return $this->belongsTo(AlumniProfile::class);
     }
 
     public function work()

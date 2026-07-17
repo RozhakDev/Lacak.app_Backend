@@ -17,7 +17,8 @@ class UserSeeder extends Seeder
             ['email' => 'admin@lacak.app'],
             [
                 'name' => 'Super Admin Pusat',
-                'password' => Hash::make('Admin#123'),                'email_verified_at' => now(),
+                'password' => Hash::make('Admin#123'),
+                'email_verified_at' => now(),
             ]
         );
         $superAdmin->assignRole('Super Admin');

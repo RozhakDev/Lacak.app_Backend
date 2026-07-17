@@ -36,7 +36,7 @@ class User extends Authenticatable
 
     public function alumniProfile()
     {
-        return $this->hasOne(alumniProfile::class);
+        return $this->hasOne(AlumniProfile::class);
     }
 
     public function otpCodes()
