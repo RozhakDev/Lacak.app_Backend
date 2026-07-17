@@ -22,17 +22,7 @@ use Throwable;
  */
 class TracerSubmissionFormPage extends FormPage
 {
-    /**
-     * @return list<ComponentContract|FieldContract>
-     */
-    protected function fields(): iterable
-    {
-        return [
-            Box::make([
-                ID::make(),
-            ]),
-        ];
-    }
+
 
     protected function buttons(): ListOf
     {

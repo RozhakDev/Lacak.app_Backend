@@ -23,15 +23,7 @@ class TracerSubmissionIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
 
-    /**
-     * @return list<FieldContract>
-     */
-    protected function fields(): iterable
-    {
-        return [
-            ID::make(),
-        ];
-    }
+
 
     /**
      * @return ListOf<ActionButtonContract>
@@ -48,6 +40,17 @@ class TracerSubmissionIndexPage extends IndexPage
     {
         return [];
     }
+
+    protected function modifyCreateButton(\MoonShine\Contracts\UI\ActionButtonContract $button): \MoonShine\Contracts\UI\ActionButtonContract
+    {
+        return \MoonShine\UI\Components\ActionButton::emptyHidden();
+    }
+
+    protected function modifyEditButton(\MoonShine\Contracts\UI\ActionButtonContract $button): \MoonShine\Contracts\UI\ActionButtonContract
+    {
+        return \MoonShine\UI\Components\ActionButton::emptyHidden();
+    }
+
 
     /**
      * @return list<QueryTag>

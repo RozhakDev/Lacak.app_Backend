@@ -19,19 +19,16 @@ use Throwable;
  */
 class TracerSubmissionDetailPage extends DetailPage
 {
-    /**
-     * @return list<FieldContract>
-     */
-    protected function fields(): iterable
-    {
-        return [
-            ID::make(),
-        ];
-    }
+
 
     protected function buttons(): ListOf
     {
         return parent::buttons();
+    }
+
+    protected function modifyEditButton(\MoonShine\Contracts\UI\ActionButtonContract $button): \MoonShine\Contracts\UI\ActionButtonContract
+    {
+        return \MoonShine\UI\Components\ActionButton::emptyHidden();
     }
 
     /**

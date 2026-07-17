@@ -30,11 +30,17 @@ class TracerService
         }
 
         return DB::transaction(function () use ($profile, $data) {
-            $submission = TracerSubmission::create([
-                'alumni_profile_id' => $profile->id,
-                'status' => $data['status'],
-                'submitted_at' => now(),
-            ]);
+            $submission = TracerSubmission::updateOrCreate(
+                ['alumni_profile_id' => $profile->id],
+                [
+                    'status' => $data['status'],
+                    'submitted_at' => now(),
+                ]
+            );
+
+            $submission->work()->delete();
+            $submission->study()->delete();
+            $submission->entrepreneur()->delete();
 
             switch ($data['status']) {
                 case 'bekerja':
