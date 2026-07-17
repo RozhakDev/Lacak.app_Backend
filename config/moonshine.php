@@ -63,6 +63,7 @@ return [
         VerifyCsrfToken::class,
         SubstituteBindings::class,
         ChangeLocale::class,
+        \App\Http\Middleware\MoonShineAdminCheck::class,
     ],
 
     // Storage

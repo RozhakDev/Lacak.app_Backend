@@ -15,14 +15,11 @@ use App\MoonShine\Resources\JobVacancy\JobVacancyResource;
 use App\MoonShine\Resources\AlumniProfile\AlumniProfileResource;
 use App\MoonShine\Resources\TracerSubmission\TracerSubmissionResource;
 use MoonShine\MenuManager\MenuGroup;
-use App\MoonShine\Resources\MoonShineUser\MoonShineUserResource;
-use App\MoonShine\Resources\MoonShineUserRole\MoonShineUserRoleResource;
+use App\MoonShine\Resources\User\UserResource;
+use App\MoonShine\Resources\Role\RoleResource;
 
 final class MoonShineLayout extends AppLayout
 {
-    /**
-     * @var null|class-string<PaletteContract>
-     */
     protected ?string $palette = RosePalette::class;
 
     protected function assets(): array
@@ -35,10 +32,10 @@ final class MoonShineLayout extends AppLayout
     protected function menu(): array
     {
         return [
-            MenuGroup::make(static fn() => __('moonshine::ui.resource.system'), [
-               MenuItem::make(MoonShineUserResource::class, static fn() => __('moonshine::ui.resource.admins_title')),
-               MenuItem::make(MoonShineUserRoleResource::class, static fn() => __('moonshine::ui.resource.role_title')),
-            ])->icon('cog-6-tooth')->canSee(fn() => auth()->user()->hasRole('Super Admin')),
+            MenuGroup::make('Sistem', [
+               MenuItem::make(UserResource::class, 'Pengguna (Users)')->icon('users'),
+               MenuItem::make(RoleResource::class, 'Hak Akses (Roles)')->icon('shield-check'),
+            ])->icon('users')->canSee(fn() => auth()->user()->hasRole('Super Admin')),
 
             MenuGroup::make('Data Master', [
                 MenuItem::make(MasterMajorResource::class, 'Master Jurusan')->icon('academic-cap'),
@@ -52,16 +49,12 @@ final class MoonShineLayout extends AppLayout
                 MenuItem::make(AlumniProfileResource::class, 'Profil Alumni')->icon('users'),
                 MenuItem::make(TracerSubmissionResource::class, 'Tracer Study')->icon('document-chart-bar'),
             ])->icon('chart-pie'),
+
         ];
     }
 
-    /**
-     * @param ColorManager $colorManager
-     */
     protected function colors(ColorManagerContract $colorManager): void
     {
         parent::colors($colorManager);
-
-        // $colorManager->primary('#00000');
     }
 }

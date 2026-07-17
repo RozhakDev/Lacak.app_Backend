@@ -44,7 +44,7 @@ class JobVacancyResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Dibuat Oleh', 'creator', 'name', \App\MoonShine\Resources\MoonShineUser\MoonShineUserResource::class)
+            BelongsTo::make('Dibuat Oleh', 'creator', 'name', \App\MoonShine\Resources\User\UserResource::class)
                 ->readonly(),
             Text::make('Judul Lowongan', 'title')->required(),
             Text::make('Nama Perusahaan', 'company_name')->required(),
