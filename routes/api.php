@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\HealthCheckController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\TracerController;
+use App\Http\Controllers\Api\V1\MasterController;
+use App\Http\Controllers\Api\V1\JobVacancyController;
 
 // Health Check
 Route::get('/health', [HealthCheckController::class, 'index']);
@@ -31,5 +33,14 @@ Route::prefix('v1')->group(function () {
         Route::prefix('tracer')->group(function () {
             Route::post('/submissions', [TracerController::class, 'store']);
         });
+
+        Route::prefix('jobs')->group(function () {
+            Route::get('/', [JobVacancyController::class, 'index']);
+            Route::get('/{id}', [JobVacancyController::class, 'show']);
+        });
+    });
+
+    Route::prefix('master')->group(function () {
+        Route::get('/majors', [MasterController::class, 'getMajors']);
     });
 });
