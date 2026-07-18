@@ -20,6 +20,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
         Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
         Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+        Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
 
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
     });
@@ -42,5 +43,6 @@ Route::prefix('v1')->group(function () {
 
     Route::prefix('master')->group(function () {
         Route::get('/majors', [MasterController::class, 'getMajors']);
+        Route::get('/tracer-options', [MasterController::class, 'getTracerOptions']);
     });
 });

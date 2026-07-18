@@ -9,6 +9,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Http\Requests\Auth\ResendOtpRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Exception;
@@ -59,7 +60,16 @@ class AuthController extends Controller
         }
     }
 
-
+    public function resendOtp(ResendOtpRequest $request): JsonResponse
+    {
+        try {
+            $data = $request->validated();
+            $result = $this->authService->generateOtp($data['email'], $data['context']);
+            return $this->successResponse('Kode verifikasi (OTP) baru telah dikirim ke email Anda.', $result, 200);
+        } catch (Exception $e) {
+            return $this->errorResponse('Gagal mengirim ulang OTP.', [$e->getMessage()], 500);
+        }
+    }
 
     public function verifyEmail(VerifyOtpRequest $request): JsonResponse
     {
