@@ -27,9 +27,9 @@ class AuthController extends Controller
     {
         try {
             $result = $this->authService->register($request->validated());
-            return $this->successResponse('Registrasi berhasil, OTP verifikasi telah dikirim ke email.', $result, 201);
+            return $this->successResponse('Pendaftaran berhasil. Silakan cek email Anda untuk kode verifikasi.', $result, 201);
         } catch (Exception $e) {
-            return $this->errorResponse('Gagal mendaftarkan akun.', [$e->getMessage()], 500);
+            return $this->errorResponse('Pendaftaran gagal. Pastikan data yang dimasukkan sudah benar.', [$e->getMessage()], 500);
         }
     }
 
@@ -37,7 +37,7 @@ class AuthController extends Controller
     {
         try {
             $result = $this->authService->login($request->validated());
-            return $this->successResponse('Login berhasil', $result);
+            return $this->successResponse('Login berhasil.', $result);
         } catch (Exception $e) {
             $statusCode = $e->getCode();
             $statusCode = (is_numeric($statusCode) && $statusCode >= 100 && $statusCode <= 599) ? (int)$statusCode : 400;
@@ -55,9 +55,9 @@ class AuthController extends Controller
     {
         try {
             $result = $this->authService->generateOtp($request->validated()['email']);
-            return $this->successResponse('Kode verifikasi (OTP) telah dikirim ke email Anda.', $result, 200);
+            return $this->successResponse('Kode OTP berhasil dikirim. Silakan cek email Anda.', $result, 200);
         } catch (Exception $e) {
-            return $this->errorResponse('Gagal memproses permintaan OTP.', [$e->getMessage()], 500);
+            return $this->errorResponse('Gagal mengirim OTP. Silakan coba lagi nanti.', [$e->getMessage()], 500);
         }
     }
 
@@ -66,7 +66,7 @@ class AuthController extends Controller
         try {
             $data = $request->validated();
             $result = $this->authService->generateOtp($data['email'], $data['context']);
-            return $this->successResponse('Kode verifikasi (OTP) baru telah dikirim ke email Anda.', $result, 200);
+            return $this->successResponse('OTP baru berhasil dikirim ke email Anda.', $result, 200);
         } catch (Exception $e) {
             return $this->errorResponse('Gagal mengirim ulang OTP.', [$e->getMessage()], 500);
         }
@@ -77,7 +77,7 @@ class AuthController extends Controller
         try {
             $data = $request->validated();
             $result = $this->authService->verifyEmail($data['email'], $data['otp']);
-            return $this->successResponse('Verifikasi email berhasil. Anda sudah bisa menggunakan sistem.', $result);
+            return $this->successResponse('Verifikasi berhasil. Akun Anda kini aktif.', $result);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), [], 400);
         }
@@ -87,7 +87,7 @@ class AuthController extends Controller
     {
         try {
             $this->authService->resetPassword($request->validated());
-            return $this->successResponse('Password berhasil diubah. Silakan login dengan password baru.');
+            return $this->successResponse('Kata sandi berhasil diperbarui. Silakan login kembali.', null);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), [], 400);
         }

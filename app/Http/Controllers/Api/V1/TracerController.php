@@ -23,7 +23,7 @@ class TracerController extends Controller
         try {
             $submission = $this->tracerService->submitTracer($request->user(), $request->validated());
             
-            return $this->successResponse('Data tracer study berhasil disimpan.', new TracerSubmissionResource($submission), 201);
+            return $this->successResponse('Data Tracer Study berhasil disimpan.', new TracerSubmissionResource($submission), 201);
         } catch (Exception $e) {
             $code = $e->getCode();
             $code = (is_numeric($code) && $code >= 100 && $code <= 599) ? (int)$code : 500;

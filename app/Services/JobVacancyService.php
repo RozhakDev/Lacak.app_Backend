@@ -39,7 +39,7 @@ class JobVacancyService
             ->find($id);
 
         if (!$job) {
-            throw new ModelNotFoundException('Lowongan pekerjaan tidak ditemukan atau sudah tidak aktif.');
+            throw new ModelNotFoundException('Lowongan tidak ditemukan atau sudah ditutup.');
         }
 
         return $job;

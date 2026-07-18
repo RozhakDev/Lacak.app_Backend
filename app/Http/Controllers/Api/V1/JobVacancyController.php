@@ -27,9 +27,9 @@ class JobVacancyController extends Controller
 
             $response = JobVacancyResource::collection($jobs);
 
-            return $this->paginatedResponse('Daftar lowongan pekerjaan berhasil diambil', $response);
+            return $this->paginatedResponse('Daftar lowongan berhasil dimuat.', $response);
         } catch (Exception $e) {
-            return $this->errorResponse('Terjadi kesalahan saat memuat lowongan.', [$e->getMessage()], 500);
+            return $this->errorResponse('Gagal memuat daftar lowongan pekerjaan.', [$e->getMessage()], 500);
         }
     }
 
@@ -37,11 +37,11 @@ class JobVacancyController extends Controller
     {
         try {
             $job = $this->jobService->getJobDetail((int) $id);
-            return $this->successResponse('Detail lowongan pekerjaan', new JobVacancyResource($job));
+            return $this->successResponse('Detail lowongan berhasil dimuat.', new JobVacancyResource($job));
         } catch (ModelNotFoundException $e) {
             return $this->errorResponse($e->getMessage(), [], 404);
         } catch (Exception $e) {
-            return $this->errorResponse('Terjadi kesalahan.', [$e->getMessage()], 500);
+            return $this->errorResponse('Terjadi kesalahan sistem.', [$e->getMessage()], 500);
         }
     }
 }

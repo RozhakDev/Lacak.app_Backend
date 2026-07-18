@@ -23,10 +23,10 @@ class ProfileController extends Controller
         $profile = $request->user()->alumniProfile;
         
         if (!$profile) {
-            return $this->errorResponse('Profil belum dilengkapi.', [], 404);
+            return $this->errorResponse('Profil tidak ditemukan atau belum lengkap.', [], 404);
         }
 
-        return $this->successResponse('Data profil alumni', new ProfileResource($profile));
+        return $this->successResponse('Data profil berhasil diambil.', new ProfileResource($profile));
     }
 
     public function update(UpdateProfileRequest $request): JsonResponse

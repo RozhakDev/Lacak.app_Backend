@@ -17,7 +17,7 @@ class MasterController extends Controller
         });
 
         return $this->successResponse(
-            'Data Master Jurusan berhasil diambil', 
+            'Daftar jurusan berhasil dimuat.', 
             MasterMajorResource::collection($majors)
         );
     }
@@ -61,6 +61,6 @@ class MasterController extends Controller
             ]
         ];
 
-        return $this->successResponse('Opsi Form Tracer berhasil diambil', $options);
+        return $this->successResponse('Opsi form tracer berhasil dimuat.', $options);
     }
 }

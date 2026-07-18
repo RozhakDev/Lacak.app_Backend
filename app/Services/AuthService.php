@@ -45,11 +45,11 @@ class AuthService
                     ->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            throw new Exception('Kredensial tidak valid atau tidak ditemukan.', 401);
+            throw new Exception('Email, NISN, atau sandi salah.', 401);
         }
 
         if (is_null($user->email_verified_at)) {
-            throw new Exception('Akun belum diverifikasi. Silakan cek email Anda untuk kode verifikasi.', 403);
+            throw new Exception('Akun belum terverifikasi. Cek email Anda untuk kode verifikasi.', 403);
         }
 
         $user->tokens()->delete();
@@ -67,7 +67,7 @@ class AuthService
         $user = User::where('email', $email)->first();
 
         if ($context === 'verify' && !is_null($user->email_verified_at)) {
-            throw new Exception('Akun Anda sudah diverifikasi sebelumnya.', 400);
+            throw new Exception('Akun ini sudah diverifikasi.', 400);
         }
 
         OtpCode::where('user_id', $user->id)
