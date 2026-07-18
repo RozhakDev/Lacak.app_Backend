@@ -19,7 +19,12 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             MasterMajorSeeder::class,
             JobVacancySeeder::class,
-            DummyDataSeeder::class,
         ]);
+
+        if (app()->environment('local', 'testing', 'development')) {
+            $this->call([
+                DummyDataSeeder::class,
+            ]);
+        }
     }
 }
