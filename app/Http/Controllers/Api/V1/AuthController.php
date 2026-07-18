@@ -39,7 +39,8 @@ class AuthController extends Controller
             $result = $this->authService->login($request->validated());
             return $this->successResponse('Login berhasil', $result);
         } catch (Exception $e) {
-            $statusCode = $e->getCode() ?: 400;
+            $statusCode = $e->getCode();
+            $statusCode = (is_numeric($statusCode) && $statusCode >= 100 && $statusCode <= 599) ? (int)$statusCode : 400;
             return $this->errorResponse($e->getMessage(), [], $statusCode);
         }
     }

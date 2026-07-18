@@ -28,4 +28,21 @@ trait ApiResponse
 
         return response()->json($response, $code);
     }
+
+    protected function paginatedResponse(string $message, mixed $data, int $code = 200): JsonResponse
+    {
+        $paginator = $data instanceof \Illuminate\Http\Resources\Json\ResourceCollection ? $data->resource : $data;
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data' => $data,
+            'meta' => [
+                'current_page' => $paginator->currentPage(),
+                'last_page' => $paginator->lastPage(),
+                'per_page' => $paginator->perPage(),
+                'total' => $paginator->total(),
+            ]
+        ], $code);
+    }
 }

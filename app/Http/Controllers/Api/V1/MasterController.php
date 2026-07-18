@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\MasterMajor;
 use App\Http\Resources\MasterMajorResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 
 class MasterController extends Controller
 {
     public function getMajors(): JsonResponse
     {
-        $majors = MasterMajor::orderBy('name', 'asc')->get();
+        $majors = Cache::remember('master_majors', now()->addDay(), function () {
+            return MasterMajor::orderBy('name', 'asc')->get();
+        });
 
         return $this->successResponse(
             'Data Master Jurusan berhasil diambil', 

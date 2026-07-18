@@ -66,6 +66,14 @@ class AuthService
     {
         $user = User::where('email', $email)->first();
 
+        if ($context === 'verify' && !is_null($user->email_verified_at)) {
+            throw new Exception('Akun Anda sudah diverifikasi sebelumnya.', 400);
+        }
+
+        OtpCode::where('user_id', $user->id)
+            ->where('is_used', false)
+            ->update(['is_used' => true]);
+
         $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
         
         $otpRecord = OtpCode::create([
@@ -102,15 +110,17 @@ class AuthService
             throw new Exception('Kode OTP tidak valid atau sudah kedaluwarsa.', 400);
         }
 
-        $validOtp->update(['is_used' => true]);
-        $user->update(['email_verified_at' => now()]);
-        
-        $token = $user->createToken('auth_token')->plainTextToken;
+        return DB::transaction(function () use ($validOtp, $user) {
+            $validOtp->update(['is_used' => true]);
+            $user->update(['email_verified_at' => now()]);
+            
+            $token = $user->createToken('auth_token')->plainTextToken;
 
-        return [
-            'user' => $user->load('roles'),
-            'token' => $token
-        ];
+            return [
+                'user' => $user->load('roles'),
+                'token' => $token
+            ];
+        });
     }
 
     public function resetPassword(array $data): void
@@ -127,11 +137,11 @@ class AuthService
             throw new Exception('Kode OTP tidak valid atau sudah kedaluwarsa.', 400);
         }
 
-        $validOtp->update(['is_used' => true]);
-        $user->update([
-            'password' => Hash::make($data['new_password'])
-        ]);
-
-        DB::table('password_reset_tokens')->where('email', $data['email'])->delete();
+        DB::transaction(function () use ($validOtp, $user, $data) {
+            $validOtp->update(['is_used' => true]);
+            $user->update([
+                'password' => Hash::make($data['new_password'])
+            ]);
+        });
     }
 }

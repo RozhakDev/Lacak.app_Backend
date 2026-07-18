@@ -18,49 +18,60 @@ use App\Models\TracerWork;
 use MoonShine\Apexcharts\Components\DonutChartMetric;
 use MoonShine\Apexcharts\Components\LineChartMetric;
 use MoonShine\Apexcharts\Support\SeriesItem;
+use Illuminate\Support\Facades\Cache;
 
 class Dashboard extends Page
 {
-
     protected string $title = 'Analitik BKK Lacak.app';
+
     public function components(): array
     {
+        $metrics = Cache::remember('dashboard_metrics', now()->addMinutes(10), function () {
+            return [
+                'total_alumni' => AlumniProfile::count(),
+                'tracer_masuk' => TracerSubmission::count(),
+                'loker_aktif' => JobVacancy::where('is_active', true)->count(),
+                'keterserapan' => [
+                    'Bekerja' => TracerSubmission::where('status', 'bekerja')->count(),
+                    'Kuliah' => TracerSubmission::where('status', 'kuliah')->count(),
+                    'Wirausaha' => TracerSubmission::where('status', 'wirausaha')->count(),
+                ],
+                'gaji_bekerja' => TracerWork::selectRaw('salary_range, count(*) as count')
+                                    ->groupBy('salary_range')
+                                    ->pluck('count', 'salary_range')
+                                    ->toArray()
+            ];
+        });
+
         return [
             Grid::make([
                 Column::make([
                     ValueMetric::make('Total Alumni Terdaftar')
-                        ->value(AlumniProfile::count())
+                        ->value($metrics['total_alumni'])
                         ->icon('users'),
                 ])->columnSpan(4),
 
                 Column::make([
                     ValueMetric::make('Tracer Study Masuk')
-                        ->value(TracerSubmission::count())
+                        ->value($metrics['tracer_masuk'])
                         ->icon('document-text'),
                 ])->columnSpan(4),
 
                 Column::make([
                     ValueMetric::make('Loker BKK Aktif')
-                        ->value(JobVacancy::where('is_active', true)->count())
+                        ->value($metrics['loker_aktif'])
                         ->icon('briefcase'),
                 ])->columnSpan(4),
 
                 Column::make([
                     DonutChartMetric::make('Keterserapan Alumni')
-                        ->values([
-                            'Bekerja' => TracerSubmission::where('status', 'bekerja')->count(),
-                            'Kuliah' => TracerSubmission::where('status', 'kuliah')->count(),
-                            'Wirausaha' => TracerSubmission::where('status', 'wirausaha')->count(),
-                        ])
+                        ->values($metrics['keterserapan'])
                 ])->columnSpan(6),
 
                 Column::make([
                     LineChartMetric::make('Distribusi Rentang Gaji (Bekerja)')
                         ->series([
-                            SeriesItem::make('Jumlah Alumni', TracerWork::selectRaw('salary_range, count(*) as count')
-                                ->groupBy('salary_range')
-                                ->pluck('count', 'salary_range')
-                                ->toArray())->column()
+                            SeriesItem::make('Jumlah Alumni', $metrics['gaji_bekerja'])->column()
                         ])
                 ])->columnSpan(6),
             ]),

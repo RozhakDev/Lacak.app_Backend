@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             UserSeeder::class,
             MasterMajorSeeder::class,
+            JobVacancySeeder::class,
         ]);
     }
 }

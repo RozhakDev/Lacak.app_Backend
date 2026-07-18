@@ -27,17 +27,7 @@ class JobVacancyController extends Controller
 
             $response = JobVacancyResource::collection($jobs);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Daftar lowongan pekerjaan berhasil diambil',
-                'data' => $response,
-                'meta' => [
-                    'current_page' => $jobs->currentPage(),
-                    'last_page' => $jobs->lastPage(),
-                    'per_page' => $jobs->perPage(),
-                    'total' => $jobs->total(),
-                ]
-            ]);
+            return $this->paginatedResponse('Daftar lowongan pekerjaan berhasil diambil', $response);
         } catch (Exception $e) {
             return $this->errorResponse('Terjadi kesalahan saat memuat lowongan.', [$e->getMessage()], 500);
         }

@@ -25,7 +25,8 @@ class TracerController extends Controller
             
             return $this->successResponse('Data tracer study berhasil disimpan.', new TracerSubmissionResource($submission), 201);
         } catch (Exception $e) {
-            $code = $e->getCode() ?: 500;
+            $code = $e->getCode();
+            $code = (is_numeric($code) && $code >= 100 && $code <= 599) ? (int)$code : 500;
             return $this->errorResponse($e->getMessage(), [], $code);
         }
     }

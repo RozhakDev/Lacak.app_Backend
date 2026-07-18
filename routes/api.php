@@ -12,15 +12,23 @@ use App\Http\Controllers\Api\V1\JobVacancyController;
 // Health Check
 Route::get('/health', [HealthCheckController::class, 'index']);
 
+// Fallback Route for unauthenticated API requests
+Route::get('/login', function () {
+    return response()->json([
+        'success' => false,
+        'message' => 'Akses ditolak. Token tidak valid atau tidak ditemukan (Unauthenticated).'
+    ], 401);
+})->name('login');
+
 // V1 API Group
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->middleware('throttle:60,1')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
-        Route::post('/login', [AuthController::class, 'login']);
-        Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+        Route::middleware('throttle:5,1')->post('/login', [AuthController::class, 'login']);
+        Route::middleware('throttle:3,1')->post('/forgot-password', [AuthController::class, 'forgotPassword']);
         Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
         Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-        Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
+        Route::middleware('throttle:3,1')->post('/resend-otp', [AuthController::class, 'resendOtp']);
 
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
     });
