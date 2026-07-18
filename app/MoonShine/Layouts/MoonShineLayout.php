@@ -57,4 +57,9 @@ final class MoonShineLayout extends AppLayout
     {
         parent::colors($colorManager);
     }
+
+    protected function hasThemes(): bool
+    {
+        return false;
+    }
 }

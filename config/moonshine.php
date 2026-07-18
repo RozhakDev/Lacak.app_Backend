@@ -24,15 +24,15 @@ use MoonShine\Laravel\Pages\LoginPage;
 use MoonShine\Laravel\Pages\ProfilePage;
 
 return [
-    'title' => env('MOONSHINE_TITLE', 'MoonShine'),
-    'logo' => '/vendor/moonshine/logo-small.svg',
-    'logo_small' => '/vendor/moonshine/logo-small.svg',
+    'title' => env('MOONSHINE_TITLE', 'Lacak.app Admin'),
+    'logo' => '/images/lacakapp.svg',
+    'logo_small' => '/images/lacakapp.svg',
 
     'favicons' => [
-        'apple-touch' => '/vendor/moonshine/apple-touch-icon.png',
-        '32' => '/vendor/moonshine/favicon-32x32.png',
-        '16' => '/vendor/moonshine/favicon-16x16.png',
-        'safari-pinned-tab' => '/vendor/moonshine/safari-pinned-tab.svg',
+        'apple-touch' => '/images/apple-touch-icon.png',
+        '32' => '/images/favicon-32x32.png',
+        '16' => '/images/favicon-16x16.png',
+        'safari-pinned-tab' => '/images/safari-pinned-tab.svg',
     ],
 
     // Default flags

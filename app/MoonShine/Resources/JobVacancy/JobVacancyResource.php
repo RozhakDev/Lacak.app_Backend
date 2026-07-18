@@ -25,27 +25,35 @@ class JobVacancyResource extends ModelResource
     protected string $model = JobVacancy::class;
     protected string $title = 'Bursa Kerja (Loker)';
 
-        protected function indexFields(): iterable
+    protected function indexFields(): iterable
     {
-        return $this->myFields();
+        return [
+            ID::make()->sortable(),
+            BelongsTo::make('Dibuat Oleh', 'creator', 'name', \App\MoonShine\Resources\User\UserResource::class),
+            Text::make('Judul Lowongan', 'title')->required(),
+            Text::make('Nama Perusahaan', 'company_name')->required(),
+            Date::make('Batas Waktu', 'expires_at')->nullable(),
+            Switcher::make('Status Aktif', 'is_active')->default(true),
+        ];
     }
 
     protected function formFields(): iterable
     {
-        return $this->myFields();
+        return [
+            Text::make('Judul Lowongan', 'title')->required(),
+            Text::make('Nama Perusahaan', 'company_name')->required(),
+            Textarea::make('Deskripsi', 'description')->required(),
+            Textarea::make('Persyaratan', 'requirements')->required(),
+            Date::make('Batas Waktu', 'expires_at')->nullable(),
+            Switcher::make('Status Aktif', 'is_active')->default(true),
+        ];
     }
 
     protected function detailFields(): iterable
     {
-        return $this->myFields();
-    }
-
-    private function myFields(): array
-    {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Dibuat Oleh', 'creator', 'name', \App\MoonShine\Resources\User\UserResource::class)
-                ->readonly(),
+            BelongsTo::make('Dibuat Oleh', 'creator', 'name', \App\MoonShine\Resources\User\UserResource::class),
             Text::make('Judul Lowongan', 'title')->required(),
             Text::make('Nama Perusahaan', 'company_name')->required(),
             Textarea::make('Deskripsi', 'description')->required(),

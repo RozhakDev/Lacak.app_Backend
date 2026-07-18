@@ -16,7 +16,7 @@ Route::get('/health', [HealthCheckController::class, 'index']);
 Route::get('/login', function () {
     return response()->json([
         'success' => false,
-        'message' => 'Akses ditolak. Token tidak valid atau tidak ditemukan (Unauthenticated).'
+        'message' => 'Sesi tidak valid. Silakan login kembali.'
     ], 401);
 })->name('login');
 

@@ -13,6 +13,7 @@ use App\MoonShine\Resources\MasterMajor\MasterMajorResource;
 use App\MoonShine\Resources\JobVacancy\JobVacancyResource;
 use App\MoonShine\Resources\AlumniProfile\AlumniProfileResource;
 use App\MoonShine\Resources\TracerSubmission\TracerSubmissionResource;
+use MoonShine\Laravel\Pages\ProfilePage;
 
 use MoonShine\Menu\MenuGroup;
 use MoonShine\Menu\MenuItem;
@@ -56,8 +57,16 @@ class MoonShineServiceProvider extends ServiceProvider
                 RoleResource::class,
             ]);
 
+        moonshine()->pages([
+            ProfilePage::class,
+        ]);
+
         moonshineColors()
             ->primary('#1e3a8a')
-            ->secondary('#facc15');
+            ->secondary('#facc15')
+            ->darkColors([
+                'body' => '#1e1e24',
+                'bg' => '#2a2a35',
+            ]);
     }
 }
