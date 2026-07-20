@@ -44,4 +44,51 @@ class JobVacancyController extends Controller
             return $this->errorResponse('Terjadi kesalahan sistem.', [$e->getMessage()], 500);
         }
     }
+
+    public function apply(Request $request, $id): JsonResponse
+    {
+        $request->validate([
+            'cv' => 'required|file|mimes:pdf,doc,docx|max:5120',
+            'cover_letter' => 'nullable|string|max:1000',
+        ]);
+
+        try {
+            $application = $this->jobService->applyToJob(
+                (int) $id,
+                auth()->id(),
+                $request->file('cv'),
+                $request->input('cover_letter')
+            );
+
+            return $this->successResponse('Berhasil melamar pekerjaan.', [
+                'id' => $application->id,
+                'status' => $application->status,
+            ], 201);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse($e->getMessage(), [], 404);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), [], 400);
+        }
+    }
+
+    public function myApplications(Request $request): JsonResponse
+    {
+        $applications = \App\Models\JobApplication::with('jobVacancy')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->paginate(10);
+
+        $formatted = $applications->through(function ($app) {
+            return [
+                'id' => $app->id,
+                'job_vacancy' => new JobVacancyResource($app->jobVacancy),
+                'status' => $app->status,
+                'cv_url' => asset('storage/' . $app->cv_url),
+                'cover_letter' => $app->cover_letter,
+                'applied_at' => $app->created_at->format('Y-m-d H:i:s'),
+            ];
+        });
+
+        return $this->paginatedResponse('Daftar lamaran berhasil dimuat.', $formatted);
+    }
 }

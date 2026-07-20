@@ -33,4 +33,9 @@ class JobVacancy extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function jobApplications()
+    {
+        return $this->hasMany(JobApplication::class);
+    }
 }

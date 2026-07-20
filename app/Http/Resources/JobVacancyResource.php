@@ -22,6 +22,7 @@ class JobVacancyResource extends JsonResource
             'posted_by' => $this->whenLoaded('creator', function () {
                 return $this->creator->name;
             }),
+            'is_applied' => $this->when(isset($this->is_applied), (bool) $this->is_applied),
         ];
     }
 }

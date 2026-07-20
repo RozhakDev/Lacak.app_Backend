@@ -24,7 +24,7 @@ use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 class JobVacancyResource extends ModelResource
 {
     protected string $model = JobVacancy::class;
-    protected string $title = 'Bursa Kerja (Loker)';
+    protected string $title = 'Lowongan Kerja';
 
     protected function search(): array
     {

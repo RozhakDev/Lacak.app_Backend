@@ -19,6 +19,7 @@ use MoonShine\Menu\MenuGroup;
 use MoonShine\Menu\MenuItem;
 use App\MoonShine\Resources\User\UserResource;
 use App\MoonShine\Resources\Role\RoleResource;
+use App\MoonShine\Resources\JobApplication\JobApplicationResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -32,6 +33,7 @@ class MoonShineServiceProvider extends ServiceProvider
             TracerSubmissionResource::class,
             UserResource::class,
                 RoleResource::class,
+                JobApplicationResource::class,
             ]);
 
         moonshine()->pages([

@@ -42,4 +42,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(OtpCode::class);
     }
+
+    public function jobApplications()
+    {
+        return $this->hasMany(JobApplication::class);
+    }
 }

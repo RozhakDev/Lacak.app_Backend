@@ -17,6 +17,7 @@ use App\MoonShine\Resources\TracerSubmission\TracerSubmissionResource;
 use MoonShine\MenuManager\MenuGroup;
 use App\MoonShine\Resources\User\UserResource;
 use App\MoonShine\Resources\Role\RoleResource;
+use App\MoonShine\Resources\JobApplication\JobApplicationResource;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -42,14 +43,14 @@ final class MoonShineLayout extends AppLayout
             ])->icon('server'),
 
             MenuGroup::make('Layanan BKK', [
-                MenuItem::make(JobVacancyResource::class, 'Bursa Kerja (Loker)')->icon('briefcase'),
+                MenuItem::make(JobVacancyResource::class, 'Lowongan Kerja')->icon('briefcase'),
+                MenuItem::make(JobApplicationResource::class, 'Lamaran Kerja')->icon('document-text'),
             ])->icon('building-office'),
 
             MenuGroup::make('Laporan Keterserapan', [
                 MenuItem::make(AlumniProfileResource::class, 'Profil Alumni')->icon('users'),
                 MenuItem::make(TracerSubmissionResource::class, 'Tracer Study')->icon('document-chart-bar'),
             ])->icon('chart-pie'),
-
         ];
     }
 

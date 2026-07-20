@@ -44,7 +44,9 @@ Route::prefix('v1')->middleware('throttle:60,1')->group(function () {
         });
 
         Route::prefix('jobs')->group(function () {
+            Route::get('/applications', [JobVacancyController::class, 'myApplications']);
             Route::get('/', [JobVacancyController::class, 'index']);
+            Route::post('/{id}/apply', [JobVacancyController::class, 'apply']);
             Route::get('/{id}', [JobVacancyController::class, 'show']);
         });
     });
