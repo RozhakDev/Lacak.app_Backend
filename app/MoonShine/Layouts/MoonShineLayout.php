@@ -32,7 +32,7 @@ final class MoonShineLayout extends AppLayout
     protected function menu(): array
     {
         return [
-            MenuGroup::make('Sistem', [
+            MenuGroup::make('Administrasi', [
                MenuItem::make(UserResource::class, 'Pengguna (Users)')->icon('users'),
                MenuItem::make(RoleResource::class, 'Hak Akses (Roles)')->icon('shield-check'),
             ])->icon('users')->canSee(fn() => auth()->user()->hasRole('Super Admin')),

@@ -22,6 +22,15 @@ class AlumniProfileResource extends ModelResource
     protected string $model = AlumniProfile::class;
     protected string $title = 'Data Profil Alumni';
 
+    protected function search(): array
+    {
+        return [
+            'id',
+            'phone_number',
+            'graduation_year',
+        ];
+    }
+
     public function getActiveActions(): array
     {
         return ['view'];

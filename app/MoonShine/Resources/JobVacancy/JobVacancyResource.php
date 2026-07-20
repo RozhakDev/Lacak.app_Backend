@@ -25,6 +25,15 @@ class JobVacancyResource extends ModelResource
     protected string $model = JobVacancy::class;
     protected string $title = 'Bursa Kerja (Loker)';
 
+    protected function search(): array
+    {
+        return [
+            'id',
+            'title',
+            'company_name',
+        ];
+    }
+
     protected function indexFields(): iterable
     {
         return [

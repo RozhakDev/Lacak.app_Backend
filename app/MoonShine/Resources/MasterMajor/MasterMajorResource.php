@@ -21,6 +21,15 @@ class MasterMajorResource extends ModelResource
     protected string $title = 'Master Jurusan';
     public string $column = 'name';
 
+    protected function search(): array
+    {
+        return [
+            'id',
+            'code',
+            'name',
+        ];
+    }
+
         protected function indexFields(): iterable
     {
         return $this->myFields();

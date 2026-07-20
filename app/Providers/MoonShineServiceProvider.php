@@ -22,29 +22,6 @@ use App\MoonShine\Resources\Role\RoleResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
-    public function menu(): array
-    {
-        return [
-            MenuGroup::make('Sistem', [
-               MenuItem::make('Pengguna (Users)', new UserResource()),
-               MenuItem::make('Hak Akses (Roles)', new RoleResource()),
-            ])->icon('heroicons.cog-6-tooth')->canSee(fn() => auth()->user()->hasRole('Super Admin')),
-
-            MenuGroup::make('Data Master', [
-                MenuItem::make('Master Jurusan', new MasterMajorResource())->icon('heroicons.academic-cap'),
-            ])->icon('heroicons.server'),
-
-            MenuGroup::make('Layanan BKK', [
-                MenuItem::make('Bursa Kerja (Loker)', new JobVacancyResource())->icon('heroicons.briefcase'),
-            ])->icon('heroicons.building-office'),
-
-            MenuGroup::make('Laporan Keterserapan', [
-                MenuItem::make('Profil Alumni', new AlumniProfileResource())->icon('heroicons.users'),
-                MenuItem::make('Tracer Study', new TracerSubmissionResource())->icon('heroicons.document-chart-bar'),
-            ])->icon('heroicons.chart-pie'),
-        ];
-    }
-
     public function boot(): void
     {
         moonshine()->resources([

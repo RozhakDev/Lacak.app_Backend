@@ -28,6 +28,16 @@ class UserResource extends ModelResource
             UserDetailPage::class,
         ];
     }
+
+    protected function search(): array
+    {
+        return [
+            'id',
+            'name',
+            'email',
+            'nisn',
+        ];
+    }
     
     protected function beforeSaving(DataWrapperContract $item): DataWrapperContract
     {
