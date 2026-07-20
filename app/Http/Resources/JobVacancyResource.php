@@ -13,6 +13,7 @@ class JobVacancyResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'company_name' => $this->company_name,
+            'images' => collect($this->images ?? [])->map(fn($path) => asset('storage/' . $path))->toArray(),
             'description' => $this->description,
             'requirements' => $this->requirements,
             'is_active' => $this->is_active,

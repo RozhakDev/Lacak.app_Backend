@@ -85,7 +85,12 @@ class TracerSubmissionIndexPage extends IndexPage
     protected function topLayer(): array
     {
         return [
-            ...parent::topLayer()
+            ...parent::topLayer(),
+            \MoonShine\UI\Components\ActionGroup::make([
+                \MoonShine\UI\Components\ActionButton::make('Export CSV (Excel)', route('export.tracer.csv'))
+                    ->icon('document-arrow-down')
+                    ->success()
+            ])
         ];
     }
 

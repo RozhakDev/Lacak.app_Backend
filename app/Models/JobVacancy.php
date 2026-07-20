@@ -13,6 +13,7 @@ class JobVacancy extends Model
         'created_by',
         'title',
         'company_name',
+        'images',
         'description',
         'requirements',
         'is_active',
@@ -24,6 +25,7 @@ class JobVacancy extends Model
         return [
             'is_active' => 'boolean',
             'expires_at' => 'date',
+            'images' => 'array',
         ];
     }
 

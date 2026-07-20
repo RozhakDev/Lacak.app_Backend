@@ -15,6 +15,7 @@ use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
+use MoonShine\UI\Fields\Image;
 use MoonShine\UI\Fields\Textarea;
 use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Date;
@@ -39,6 +40,7 @@ class JobVacancyResource extends ModelResource
         return [
             ID::make()->sortable(),
             BelongsTo::make('Dibuat Oleh', 'creator', 'name', \App\MoonShine\Resources\User\UserResource::class),
+            Image::make('Poster/Gambar', 'images')->multiple()->disk('public')->dir('jobs'),
             Text::make('Judul Lowongan', 'title')->required(),
             Text::make('Nama Perusahaan', 'company_name')->required(),
             Date::make('Batas Waktu', 'expires_at')->nullable(),
@@ -49,6 +51,7 @@ class JobVacancyResource extends ModelResource
     protected function formFields(): iterable
     {
         return [
+            Image::make('Poster/Gambar', 'images')->multiple()->disk('public')->dir('jobs'),
             Text::make('Judul Lowongan', 'title')->required(),
             Text::make('Nama Perusahaan', 'company_name')->required(),
             Textarea::make('Deskripsi', 'description')->required(),
@@ -63,6 +66,7 @@ class JobVacancyResource extends ModelResource
         return [
             ID::make()->sortable(),
             BelongsTo::make('Dibuat Oleh', 'creator', 'name', \App\MoonShine\Resources\User\UserResource::class),
+            Image::make('Poster/Gambar', 'images')->multiple()->disk('public')->dir('jobs'),
             Text::make('Judul Lowongan', 'title')->required(),
             Text::make('Nama Perusahaan', 'company_name')->required(),
             Textarea::make('Deskripsi', 'description')->required(),
@@ -84,6 +88,7 @@ class JobVacancyResource extends ModelResource
         return [
             'title' => ['required', 'string', 'max:255'],
             'company_name' => ['required', 'string', 'max:255'],
+            'images.*' => ['nullable', 'image', 'max:2048'],
             'description' => ['required', 'string'],
             'requirements' => ['required', 'string'],
         ];
