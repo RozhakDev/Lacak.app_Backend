@@ -20,6 +20,8 @@ use MoonShine\Menu\MenuItem;
 use App\MoonShine\Resources\User\UserResource;
 use App\MoonShine\Resources\Role\RoleResource;
 use App\MoonShine\Resources\JobApplication\JobApplicationResource;
+use App\MoonShine\Resources\Event\EventResource;
+use App\MoonShine\Resources\EventParticipant\EventParticipantResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -34,6 +36,8 @@ class MoonShineServiceProvider extends ServiceProvider
             UserResource::class,
                 RoleResource::class,
                 JobApplicationResource::class,
+                EventResource::class,
+                EventParticipantResource::class,
             ]);
 
         moonshine()->pages([

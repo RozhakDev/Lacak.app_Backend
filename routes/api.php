@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\TracerController;
 use App\Http\Controllers\Api\V1\MasterController;
 use App\Http\Controllers\Api\V1\JobVacancyController;
+use App\Http\Controllers\Api\V1\EventController;
 
 // Health Check
 Route::get('/health', [HealthCheckController::class, 'index']);
@@ -48,6 +49,13 @@ Route::prefix('v1')->middleware('throttle:60,1')->group(function () {
             Route::get('/', [JobVacancyController::class, 'index']);
             Route::post('/{id}/apply', [JobVacancyController::class, 'apply']);
             Route::get('/{id}', [JobVacancyController::class, 'show']);
+        });
+
+        Route::prefix('events')->group(function () {
+            Route::get('/my-events', [EventController::class, 'myEvents']);
+            Route::get('/', [EventController::class, 'index']);
+            Route::post('/{id}/register', [EventController::class, 'register']);
+            Route::get('/{id}', [EventController::class, 'show']);
         });
     });
 

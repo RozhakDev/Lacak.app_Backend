@@ -18,6 +18,8 @@ use MoonShine\MenuManager\MenuGroup;
 use App\MoonShine\Resources\User\UserResource;
 use App\MoonShine\Resources\Role\RoleResource;
 use App\MoonShine\Resources\JobApplication\JobApplicationResource;
+use App\MoonShine\Resources\Event\EventResource;
+use App\MoonShine\Resources\EventParticipant\EventParticipantResource;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -45,6 +47,8 @@ final class MoonShineLayout extends AppLayout
             MenuGroup::make('Layanan BKK', [
                 MenuItem::make(JobVacancyResource::class, 'Lowongan Kerja')->icon('briefcase'),
                 MenuItem::make(JobApplicationResource::class, 'Lamaran Kerja')->icon('document-text'),
+                MenuItem::make(EventResource::class, 'Event & Pelatihan')->icon('calendar'),
+                MenuItem::make(EventParticipantResource::class, 'Peserta Event')->icon('users'),
             ])->icon('building-office'),
 
             MenuGroup::make('Laporan Keterserapan', [
