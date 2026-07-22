@@ -47,8 +47,8 @@ final class MoonShineLayout extends AppLayout
             MenuGroup::make('Layanan BKK', [
                 MenuItem::make(JobVacancyResource::class, 'Lowongan Kerja')->icon('briefcase'),
                 MenuItem::make(JobApplicationResource::class, 'Lamaran Kerja')->icon('document-text'),
-                MenuItem::make(EventResource::class, 'Event & Pelatihan')->icon('calendar'),
-                MenuItem::make(EventParticipantResource::class, 'Peserta Event')->icon('users'),
+                MenuItem::make(EventResource::class, 'Kegiatan')->icon('calendar'),
+                MenuItem::make(EventParticipantResource::class, 'Peserta Kegiatan')->icon('users'),
             ])->icon('building-office'),
 
             MenuGroup::make('Laporan Keterserapan', [

@@ -18,7 +18,7 @@ use MoonShine\Support\ListOf;
 class EventParticipantResource extends ModelResource
 {
     protected string $model = EventParticipant::class;
-    protected string $title = 'Peserta Event';
+    protected string $title = 'Peserta Kegiatan';
     protected bool $withPolicy = false;
 
     protected function activeActions(): ListOf

@@ -22,6 +22,7 @@ use App\MoonShine\Resources\Role\RoleResource;
 use App\MoonShine\Resources\JobApplication\JobApplicationResource;
 use App\MoonShine\Resources\Event\EventResource;
 use App\MoonShine\Resources\EventParticipant\EventParticipantResource;
+use App\MoonShine\Resources\AlumniExperience\AlumniExperienceResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,7 @@ class MoonShineServiceProvider extends ServiceProvider
                 JobApplicationResource::class,
                 EventResource::class,
                 EventParticipantResource::class,
+                AlumniExperienceResource::class,
             ]);
 
         moonshine()->pages([

@@ -29,7 +29,12 @@ class AlumniProfileIndexPage extends IndexPage
     protected function fields(): iterable
     {
         return [
-            ID::make(),
+            ID::make()->sortable(),
+            \MoonShine\UI\Fields\Image::make('Foto', 'avatar_url')->disk('public'),
+            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Nama', 'user', 'name', \App\MoonShine\Resources\User\UserResource::class),
+            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Jurusan', 'major', 'name', \App\MoonShine\Resources\MasterMajor\MasterMajorResource::class),
+            \MoonShine\UI\Fields\Text::make('Tahun Lulus', 'graduation_year')->sortable(),
+            \MoonShine\UI\Fields\Text::make('No. HP', 'phone_number'),
         ];
     }
 

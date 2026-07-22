@@ -14,6 +14,17 @@ class AlumniProfile extends Model
         'major_id',
         'graduation_year',
         'phone_number',
+        'avatar_url',
+        'about_me',
+        'skills',
+        'linkedin_url',
+        'portfolio_url',
+        'resume_url',
+    ];
+
+    protected $casts = [
+        'graduation_year' => 'integer',
+        'skills' => 'array',
     ];
 
     public function user()
@@ -29,5 +40,10 @@ class AlumniProfile extends Model
     public function tracerSubmissions()
     {
         return $this->hasMany(TracerSubmission::class);
+    }
+
+    public function experiences()
+    {
+        return $this->hasMany(AlumniExperience::class);
     }
 }

@@ -6,19 +6,34 @@ use App\Models\User;
 use App\Models\AlumniProfile;
 use App\Models\TracerSubmission;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Exception;
 
 class TracerService
 {
     public function updateProfile(User $user, array $data): AlumniProfile
     {
+        $profileData = [
+            'major_id' => $data['major_id'],
+            'graduation_year' => $data['graduation_year'],
+            'phone_number' => $data['phone_number'],
+            'about_me' => $data['about_me'] ?? null,
+            'skills' => $data['skills'] ?? null,
+            'linkedin_url' => $data['linkedin_url'] ?? null,
+            'portfolio_url' => $data['portfolio_url'] ?? null,
+        ];
+
+        if (isset($data['avatar']) && $data['avatar'] instanceof \Illuminate\Http\UploadedFile) {
+            $profileData['avatar_url'] = $data['avatar']->store('alumni_avatars', 'public');
+        }
+
+        if (isset($data['resume']) && $data['resume'] instanceof \Illuminate\Http\UploadedFile) {
+            $profileData['resume_url'] = $data['resume']->store('alumni_resumes', 'public');
+        }
+
         return AlumniProfile::updateOrCreate(
             ['user_id' => $user->id],
-            [
-                'major_id' => $data['major_id'],
-                'graduation_year' => $data['graduation_year'],
-                'phone_number' => $data['phone_number'],
-            ]
+            $profileData
         );
     }
 

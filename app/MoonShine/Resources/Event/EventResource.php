@@ -17,7 +17,7 @@ class EventResource extends ModelResource
 {
     protected string $model = Event::class;
 
-    protected string $title = 'Event & Pelatihan';
+    protected string $title = 'Kegiatan';
     
     protected bool $withPolicy = false;
 

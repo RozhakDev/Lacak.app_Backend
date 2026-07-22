@@ -16,6 +16,8 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\ActionButtons\ActionButton;
+use MoonShine\Support\Enums\Action;
+use MoonShine\Support\ListOf;
 
 class AlumniProfileResource extends ModelResource
 {
@@ -31,35 +33,19 @@ class AlumniProfileResource extends ModelResource
         ];
     }
 
-    public function getActiveActions(): array
+    protected function activeActions(): ListOf
     {
-        return ['view'];
+        return new ListOf(Action::class, [
+            Action::VIEW,
+        ]);
     }
 
-        protected function indexFields(): iterable
-    {
-        return $this->myFields();
-    }
-
-    protected function formFields(): iterable
-    {
-        return $this->myFields();
-    }
-
-    protected function detailFields(): iterable
-    {
-        return $this->myFields();
-    }
-
-    private function myFields(): array
+    protected function pages(): array
     {
         return [
-            ID::make()->sortable(),
-            Text::make('User (NISN)', 'user.nisn'),
-            Text::make('Nama', 'user.name'),
-            Text::make('Jurusan', 'major.name'),
-            Text::make('Tahun Lulus', 'graduation_year')->sortable(),
-            Text::make('No. Telepon', 'phone_number'),
+            AlumniProfileIndexPage::class,
+            AlumniProfileFormPage::class,
+            AlumniProfileDetailPage::class,
         ];
     }
 }

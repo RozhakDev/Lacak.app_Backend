@@ -11,6 +11,7 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\File;
 use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Textarea;
+use MoonShine\UI\Fields\Preview;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use App\MoonShine\Resources\JobApplication\JobApplicationResource;
 use MoonShine\Support\ListOf;
@@ -31,7 +32,28 @@ class JobApplicationDetailPage extends DetailPage
             ID::make()->sortable(),
             BelongsTo::make('Lowongan', 'jobVacancy', 'title', \App\MoonShine\Resources\JobVacancy\JobVacancyResource::class),
             BelongsTo::make('Pelamar', 'user', 'name', \App\MoonShine\Resources\User\UserResource::class),
-            File::make('CV', 'cv_url')->disk('public')->dir('job_applications/cv'),
+            Preview::make('Profil & Keahlian Kandidat', 'user_id', function ($item) {
+                if (!$item->user || !$item->user->alumniProfile) return 'Belum melengkapi profil.';
+                $profile = $item->user->alumniProfile;
+                
+                $html = "";
+                if ($profile->avatar_url) {
+                    $html .= "<img src='/storage/{$profile->avatar_url}' style='width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;'><br>";
+                }
+                $html .= "<strong>Keahlian:</strong> " . ($profile->skills ? implode(', ', $profile->skills) : 'Belum diisi') . "<br>";
+                $html .= "<strong>Tentang Saya:</strong> " . ($profile->about_me ?? 'Belum diisi') . "<br>";
+                
+                $links = [];
+                if ($profile->linkedin_url) $links[] = "<a href='{$profile->linkedin_url}' target='_blank'>LinkedIn</a>";
+                if ($profile->portfolio_url) $links[] = "<a href='{$profile->portfolio_url}' target='_blank'>Portofolio</a>";
+                
+                if (!empty($links)) {
+                    $html .= "<br>" . implode(' | ', $links);
+                }
+                
+                return $html;
+            }),
+            File::make('CV Lampiran Loker', 'cv_url')->disk('public')->dir('job_applications/cv'),
             Textarea::make('Cover Letter', 'cover_letter')->nullable(),
             Select::make('Status', 'status')->options([
                 'pending' => 'Menunggu Review',

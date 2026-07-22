@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\TracerController;
 use App\Http\Controllers\Api\V1\MasterController;
 use App\Http\Controllers\Api\V1\JobVacancyController;
 use App\Http\Controllers\Api\V1\EventController;
+use App\Http\Controllers\Api\V1\AlumniExperienceController;
 
 // Health Check
 Route::get('/health', [HealthCheckController::class, 'index']);
@@ -37,7 +38,13 @@ Route::prefix('v1')->middleware('throttle:60,1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('profile')->group(function () {
             Route::get('/', [ProfileController::class, 'show']);
-            Route::put('/', [ProfileController::class, 'update']);
+            Route::post('/', [ProfileController::class, 'update']);
+            
+            Route::prefix('experiences')->group(function () {
+                Route::post('/', [AlumniExperienceController::class, 'store']);
+                Route::put('/{id}', [AlumniExperienceController::class, 'update']);
+                Route::delete('/{id}', [AlumniExperienceController::class, 'destroy']);
+            });
         });
 
         Route::prefix('tracer')->group(function () {

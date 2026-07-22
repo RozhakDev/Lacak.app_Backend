@@ -26,6 +26,17 @@ class AlumniProfileDetailPage extends DetailPage
     {
         return [
             ID::make(),
+            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('User', 'user', 'name', \App\MoonShine\Resources\User\UserResource::class),
+            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Jurusan', 'major', 'name', \App\MoonShine\Resources\MasterMajor\MasterMajorResource::class),
+            \MoonShine\UI\Fields\Text::make('Tahun Lulus', 'graduation_year'),
+            \MoonShine\UI\Fields\Text::make('No. HP', 'phone_number'),
+            \MoonShine\UI\Fields\Image::make('Foto Profil', 'avatar_url')->disk('public'),
+            \MoonShine\UI\Fields\Textarea::make('Tentang Saya', 'about_me'),
+            \MoonShine\UI\Fields\Json::make('Keahlian (Skills)', 'skills')->onlyValue(),
+            \MoonShine\UI\Fields\Url::make('LinkedIn', 'linkedin_url'),
+            \MoonShine\UI\Fields\Url::make('Portofolio', 'portfolio_url'),
+            \MoonShine\UI\Fields\File::make('Curriculum Vitae', 'resume_url')->disk('public'),
+            \MoonShine\Laravel\Fields\Relationships\HasMany::make('Pengalaman', 'experiences', resource: \App\MoonShine\Resources\AlumniExperience\AlumniExperienceResource::class)
         ];
     }
 
