@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000",
+            "url": "http://localhost:8000",
             "description": "API Server"
         }
     ],
@@ -26,12 +26,957 @@
                     }
                 }
             }
+        },
+        "/api/v1/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Pendaftaran Akun Alumni",
+                "description": "Mendaftarkan entitas akun baru khusus untuk pengguna (Alumni). Sistem akan melakukan validasi unik pada NISN dan Email, lalu men-generate OTP untuk aktivasi.",
+                "operationId": "87dab0081accee0c15b52cf5c08637c1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "nisn",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Ahmad Budi Santoso"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "alumni@smk-contoh.sch.id"
+                                    },
+                                    "nisn": {
+                                        "type": "string",
+                                        "example": "0011223344"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Secret123!"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Secret123!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pendaftaran berhasil, sistem mengirimkan kode OTP ke email."
+                    },
+                    "422": {
+                        "description": "Gagal validasi struktur payload."
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Otentikasi Pengguna (Login)",
+                "description": "Melakukan verifikasi kredensial pengguna (NISN atau Email). Mengembalikan token Bearer Sanctum yang akan digunakan untuk seluruh akses terproteksi.",
+                "operationId": "5a244c4832152d5c9bcaafa1d96cedf6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "identifier",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "identifier": {
+                                        "description": "Bisa menggunakan Email atau NISN",
+                                        "type": "string",
+                                        "example": "alumni@smk-contoh.sch.id"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Secret123!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Otentikasi berhasil. Token diberikan."
+                    },
+                    "401": {
+                        "description": "Kredensial tidak valid."
+                    },
+                    "403": {
+                        "description": "Akun belum diverifikasi OTP."
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/verify-email": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Verifikasi Kode OTP Email",
+                "description": "Memverifikasi token OTP 6 digit yang dikirimkan ke email alumni pada saat pendaftaran awal.",
+                "operationId": "12f22b12ce73c87b4f9abe2eeee81561",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "otp"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "alumni@smk-contoh.sch.id"
+                                    },
+                                    "otp": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email berhasil diverifikasi, status akun menjadi aktif."
+                    },
+                    "400": {
+                        "description": "OTP salah atau kedaluwarsa."
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/resend-otp": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Kirim Ulang OTP",
+                "description": "Meminta sistem untuk men-generate ulang dan mengirimkan OTP baru ke email pengguna (berlaku untuk konteks verifikasi atau reset password).",
+                "operationId": "366f6c3436f7f5e7bd535674bb97f7f6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "context"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "alumni@smk-contoh.sch.id"
+                                    },
+                                    "context": {
+                                        "type": "string",
+                                        "example": "verify",
+                                        "enum": [
+                                            "verify",
+                                            "reset"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OTP baru berhasil diterbitkan dan dikirim."
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Lupa Kata Sandi (Permintaan OTP)",
+                "description": "Menginisiasi alur pemulihan akun. Sistem mengirimkan kode OTP khusus ke email pengguna yang terdaftar.",
+                "operationId": "95901a460f6d5285b590d6ebbf749c5a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "alumni@smk-contoh.sch.id"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Instruksi pemulihan berhasil dikirim."
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/reset-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Pemulihan Kata Sandi (Reset)",
+                "description": "Mengganti kata sandi lama dengan yang baru. Memerlukan kode OTP sah dari alur Lupa Kata Sandi.",
+                "operationId": "daae83dfa2ab4bbac43d4fff2730b238",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "otp",
+                                    "new_password",
+                                    "new_password_confirmation"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "alumni@smk-contoh.sch.id"
+                                    },
+                                    "otp": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "new_password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "NewSecret123!"
+                                    },
+                                    "new_password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "NewSecret123!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Kata sandi berhasil diperbarui."
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Akhiri Sesi (Logout)",
+                "description": "Menghapus dan menonaktifkan token akses Bearer saat ini sehingga tidak dapat digunakan kembali.",
+                "operationId": "dbcbbb751ffb19ad3436a39af0c209e5",
+                "responses": {
+                    "200": {
+                        "description": "Sesi berhasil diakhiri."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/profile": {
+            "get": {
+                "tags": [
+                    "Alumni Profile"
+                ],
+                "summary": "Lihat Profil Alumni Saat Ini",
+                "description": "Mengambil data profil lengkap dari alumni yang sedang terotentikasi, beserta relasi portofolio dan riwayat pengalaman.",
+                "operationId": "c7a30577447ddf288ad0fba90b452755",
+                "responses": {
+                    "200": {
+                        "description": "Payload data profil sukses diambil."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Alumni Profile"
+                ],
+                "summary": "Perbarui Data Profil Alumni",
+                "description": "Melakukan pembaruan terhadap atribut profil alumni. Menggunakan Content-Type multipart/form-data untuk memfasilitasi unggahan Avatar dan Dokumen Resume (CV).",
+                "operationId": "7255f83a771d63d78180bd7ed09ba784",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "major_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "graduation_year": {
+                                        "type": "integer",
+                                        "example": 2024
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "example": "08123456789"
+                                    },
+                                    "avatar": {
+                                        "description": "Berkas gambar (JPG/PNG/WEBP), max 2MB",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "resume": {
+                                        "description": "Berkas dokumen (PDF), max 5MB",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "about_me": {
+                                        "type": "string",
+                                        "example": "Seorang software engineer..."
+                                    },
+                                    "skills[0]": {
+                                        "type": "string",
+                                        "example": "PHP"
+                                    },
+                                    "skills[1]": {
+                                        "type": "string",
+                                        "example": "React"
+                                    },
+                                    "linkedin_url": {
+                                        "type": "string",
+                                        "example": "https://linkedin.com/in/alumni"
+                                    },
+                                    "portfolio_url": {
+                                        "type": "string",
+                                        "example": "https://alumni.dev"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Data profil berhasil disinkronisasi."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/profile/experiences": {
+            "post": {
+                "tags": [
+                    "Alumni Experience"
+                ],
+                "summary": "Tambahkan Pengalaman Baru",
+                "description": "Mendaftarkan rekam jejak pengalaman kerja, organisasi, atau sertifikasi ke dalam profil alumni.",
+                "operationId": "9aa64fd8744cb2260a99318a4e830aa2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "company_name",
+                                    "position",
+                                    "start_date"
+                                ],
+                                "properties": {
+                                    "company_name": {
+                                        "type": "string",
+                                        "example": "PT Teknologi Bangsa"
+                                    },
+                                    "position": {
+                                        "type": "string",
+                                        "example": "Backend Developer"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Mengembangkan arsitektur microservices..."
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2023-01-15"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-01-15"
+                                    },
+                                    "is_current": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pengalaman baru direkam."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/profile/experiences/{id}": {
+            "put": {
+                "tags": [
+                    "Alumni Experience"
+                ],
+                "summary": "Ubah Data Pengalaman",
+                "description": "Melakukan mutasi data pada rekam jejak pengalaman yang sudah ada berdasarkan ID yang spesifik.",
+                "operationId": "15f6ee6e64c8f4c8458e794ec17cec6a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "company_name": {
+                                        "type": "string",
+                                        "example": "PT Teknologi Bangsa Terdepan"
+                                    },
+                                    "position": {
+                                        "type": "string",
+                                        "example": "Senior Backend Developer"
+                                    },
+                                    "is_current": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Pengalaman sukses diperbarui."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Alumni Experience"
+                ],
+                "summary": "Hapus Pengalaman",
+                "description": "Menghapus rekam jejak pengalaman secara permanen dari profil alumni.",
+                "operationId": "bc6120e03f25702ba859599396ec436f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data pengalaman berhasil dihapus."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/tracer/submissions": {
+            "post": {
+                "tags": [
+                    "Tracer Study"
+                ],
+                "summary": "Kirim Kuesioner Tracer Study",
+                "description": "Merekam hasil kuesioner pelacakan alumni. Payload bersifat polimorfik dan akan dievaluasi secara dinamis berdasarkan parameter `status` (bekerja, kuliah, wirausaha).",
+                "operationId": "59612080806646f74c7ed506a6050057",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "example": "bekerja",
+                                        "enum": [
+                                            "bekerja",
+                                            "kuliah",
+                                            "wirausaha"
+                                        ]
+                                    },
+                                    "location_scale": {
+                                        "type": "string",
+                                        "example": "dalam_kota"
+                                    },
+                                    "location_country": {
+                                        "type": "string",
+                                        "example": "dalam_negeri"
+                                    },
+                                    "field_of_work": {
+                                        "type": "string",
+                                        "example": "Software Engineering"
+                                    },
+                                    "salary_range": {
+                                        "type": "string",
+                                        "example": "5_-_10_juta"
+                                    },
+                                    "company_name": {
+                                        "type": "string",
+                                        "example": "PT Maju Mundur"
+                                    },
+                                    "position": {
+                                        "type": "string",
+                                        "example": "Junior Developer"
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-02-01"
+                                    },
+                                    "is_linear": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Laporan Tracer Study berhasil direkam."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/tracer/export": {
+            "get": {
+                "tags": [
+                    "Tracer Study"
+                ],
+                "summary": "Ekspor Laporan Tracer (Excel)",
+                "description": "Menghasilkan format berkas Excel (.xlsx) murni yang merangkum keseluruhan entri partisipasi Tracer Study untuk pelaporan akreditasi BKK.",
+                "operationId": "af77f29bad946d9ecd92dc550da826f6",
+                "responses": {
+                    "200": {
+                        "description": "Stream unduhan berkas biner Excel."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/master/majors": {
+            "get": {
+                "tags": [
+                    "Master Data"
+                ],
+                "summary": "Daftar Master Konsentrasi Jurusan",
+                "description": "Menampilkan senarai referensi statis untuk atribut Jurusan di SMK (contoh: TKJ, RPL, TKR). Diperuntukkan sebagai pengisi opsi dropdown pada Frontend.",
+                "operationId": "5b9b999ab6ad43acf31c8e9f7740398d",
+                "responses": {
+                    "200": {
+                        "description": "Sukses mengembalikan matriks daftar jurusan."
+                    }
+                }
+            }
+        },
+        "/api/v1/master/tracer-options": {
+            "get": {
+                "tags": [
+                    "Master Data"
+                ],
+                "summary": "Daftar Meta Parameter Kuesioner Tracer",
+                "description": "Menampilkan himpunan Enumerasi (opsi-opsi valid) untuk form pengisian Tracer Study seperti klasifikasi rentang gaji, skala lokasi perusahaan, maupun batas omset wirausaha.",
+                "operationId": "43a2e6381dd7c4a4f65e1a678e3bf75d",
+                "responses": {
+                    "200": {
+                        "description": "Sukses mengembalikan peta struktur form kuesioner dinamis."
+                    }
+                }
+            }
+        },
+        "/api/v1/jobs": {
+            "get": {
+                "tags": [
+                    "Job Vacancy"
+                ],
+                "summary": "Eksplorasi Lowongan Pekerjaan",
+                "description": "Menyajikan katalog lowongan pekerjaan yang saat ini berstatus aktif. Mendukung param query pencarian secara opsional.",
+                "operationId": "c69e677c4a337b535de3b68c1c2efedf",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Kata kunci penelusuran (opsional)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Katalog pekerjaan berhasil diambil dengan struktur paginasi."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/jobs/applications": {
+            "get": {
+                "tags": [
+                    "Job Vacancy"
+                ],
+                "summary": "Riwayat Lamaran Saya",
+                "description": "Menampilkan log komprehensif atas semua lowongan yang pernah dilamar oleh alumni beserta representasi status terkininya.",
+                "operationId": "33a4e3df269267d1f1f8ecdb06067103",
+                "responses": {
+                    "200": {
+                        "description": "Log histori lamaran didapatkan."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/jobs/{id}": {
+            "get": {
+                "tags": [
+                    "Job Vacancy"
+                ],
+                "summary": "Rincian Lowongan Pekerjaan",
+                "description": "Mengambil deskripsi dan prasyarat utuh dari sebuah lowongan pekerjaan spesifik berdasarkan ID.",
+                "operationId": "379b0ad0b8de0b3a47542407c5dbeaea",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data detail lowongan sukses ditarik."
+                    },
+                    "404": {
+                        "description": "Rekam jejak lowongan tidak ditemukan."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/jobs/{id}/apply": {
+            "post": {
+                "tags": [
+                    "Job Vacancy"
+                ],
+                "summary": "Kirim Ajuan Lamaran Kerja",
+                "description": "Mendaftarkan aplikasi partisipasi pada sebuah lowongan. Menggunakan payload formulir untuk mengakomodasi pengunggahan berkas lamaran.",
+                "operationId": "afaf33124918cc35338d31d1e9872b8d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "cv": {
+                                        "description": "Berkas Curiculum Vitae (PDF/DOCX), max 5MB",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "cover_letter": {
+                                        "description": "Surat pengantar lamaran (Opsional)",
+                                        "type": "string",
+                                        "example": "Yth. HRD Manager, bersama ini saya sampaikan..."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Aplikasi lamaran sukses terekam dalam pangkalan data."
+                    },
+                    "400": {
+                        "description": "Penolakan sistem karena alumni telah melakukan aplikasi sebelumnya pada loker ini."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/events": {
+            "get": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Katalog Acara & Pelatihan",
+                "description": "Mengambil portofolio kegiatan atau acara bursa pelatihan yang diregistrasikan oleh instansi.",
+                "operationId": "8b2c1948b7266403a6e55565e5f9bd8a",
+                "responses": {
+                    "200": {
+                        "description": "Dataset katalog acara sukses dimuat dengan paginasi berurutan."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/events/my-events": {
+            "get": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Riwayat Partisipasi Acara Saya",
+                "description": "Menampilkan rekam historis acara yang pernah diikuti maupun diregistrasikan oleh alumni terkait.",
+                "operationId": "e461979ed9c16939dd2d566bd59065bf",
+                "responses": {
+                    "200": {
+                        "description": "Kumpulan histori partisipasi ditarik secara parsial."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/events/{id}": {
+            "get": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Informasi Detil Acara",
+                "description": "Membedah representasi penuh dari deskripsi acara termasuk parameter geografis (lokasi) dan waktu pelaksanaan.",
+                "operationId": "7653649487c932e8fc6500188822ce5e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail spesifik memuat entitas objek acara tunggal."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/events/{id}/register": {
+            "post": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Registrasi Kehadiran Acara",
+                "description": "Mem-validasi dan mendaftarkan alumni sebagai delegasi/partisipan ke dalam sesi acara yang dikelola BKK.",
+                "operationId": "51ef24bd13c72e7303cadce8fd7a5b7e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Hak kepesertaan terdaftar dengan sukses."
+                    },
+                    "400": {
+                        "description": "Sistem menolak duplikasi pendaftaran kepesertaan."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Masukkan token Sanctum yang didapatkan dari proses Login.",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
         }
     },
     "tags": [
         {
             "name": "System",
             "description": "System"
+        },
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Alumni Profile",
+            "description": "Alumni Profile"
+        },
+        {
+            "name": "Alumni Experience",
+            "description": "Alumni Experience"
+        },
+        {
+            "name": "Tracer Study",
+            "description": "Tracer Study"
+        },
+        {
+            "name": "Master Data",
+            "description": "Master Data"
+        },
+        {
+            "name": "Job Vacancy",
+            "description": "Job Vacancy"
+        },
+        {
+            "name": "Events",
+            "description": "Events"
         }
     ]
 }
