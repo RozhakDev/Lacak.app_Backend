@@ -18,6 +18,9 @@ return new class extends Migration
             $table->timestamp('submitted_at')->useCurrent();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('created_at');
+            $table->index('status');
         });
     }
 

@@ -59,25 +59,28 @@ class Dashboard extends Page
                 $trendEvent[$date] = 0;
             }
 
-            $tracerData = TracerSubmission::where('created_at', '>=', Carbon::now()->subDays($days))->get()->groupBy(function($item) {
-                return $item->created_at->format('Y-m-d');
-            });
-            foreach($tracerData as $date => $items) {
-                if(isset($trendTracer[$date])) $trendTracer[$date] = $items->count();
+            $tracerData = TracerSubmission::where('created_at', '>=', Carbon::now()->subDays($days))
+                ->selectRaw('DATE(created_at) as date, count(*) as count')
+                ->groupBy('date')
+                ->pluck('count', 'date');
+            foreach($tracerData as $date => $count) {
+                if(isset($trendTracer[$date])) $trendTracer[$date] = $count;
             }
 
-            $lamaranData = JobApplication::where('created_at', '>=', Carbon::now()->subDays($days))->get()->groupBy(function($item) {
-                return $item->created_at->format('Y-m-d');
-            });
-            foreach($lamaranData as $date => $items) {
-                if(isset($trendLamaran[$date])) $trendLamaran[$date] = $items->count();
+            $lamaranData = JobApplication::where('created_at', '>=', Carbon::now()->subDays($days))
+                ->selectRaw('DATE(created_at) as date, count(*) as count')
+                ->groupBy('date')
+                ->pluck('count', 'date');
+            foreach($lamaranData as $date => $count) {
+                if(isset($trendLamaran[$date])) $trendLamaran[$date] = $count;
             }
 
-            $eventData = EventParticipant::where('created_at', '>=', Carbon::now()->subDays($days))->get()->groupBy(function($item) {
-                return $item->created_at->format('Y-m-d');
-            });
-            foreach($eventData as $date => $items) {
-                if(isset($trendEvent[$date])) $trendEvent[$date] = $items->count();
+            $eventData = EventParticipant::where('created_at', '>=', Carbon::now()->subDays($days))
+                ->selectRaw('DATE(created_at) as date, count(*) as count')
+                ->groupBy('date')
+                ->pluck('count', 'date');
+            foreach($eventData as $date => $count) {
+                if(isset($trendEvent[$date])) $trendEvent[$date] = $count;
             }
 
             $data['trend_tracer'] = $trendTracer;

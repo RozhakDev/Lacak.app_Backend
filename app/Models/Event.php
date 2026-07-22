@@ -10,6 +10,18 @@ class Event extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            if (empty($model->created_by)) {
+                $model->created_by = auth()->id() ?? 1;
+            }
+            if (empty($model->slug)) {
+                $model->slug = \Illuminate\Support\Str::slug($model->title) . '-' . uniqid();
+            }
+        });
+    }
+
     protected $fillable = [
         'created_by',
         'title',

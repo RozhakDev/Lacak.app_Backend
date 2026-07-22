@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['event_id', 'user_id']);
+            $table->index('created_at');
         });
     }
 

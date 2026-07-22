@@ -82,4 +82,12 @@ class JobVacancyService
             'status' => 'pending'
         ]);
     }
+
+    public function getMyApplications(int $userId, int $perPage = 10): LengthAwarePaginator
+    {
+        return JobApplication::with('jobVacancy')
+            ->where('user_id', $userId)
+            ->latest()
+            ->paginate($perPage);
+    }
 }

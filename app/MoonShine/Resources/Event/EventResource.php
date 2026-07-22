@@ -33,19 +33,6 @@ class EventResource extends ModelResource
         ];
     }
 
-    protected function beforeSave(Model $item): Model
-    {
-        if (!$item->exists) {
-            $item->created_by = auth()->id();
-        }
-
-        if (empty($item->slug)) {
-            $item->slug = \Illuminate\Support\Str::slug($item->title) . '-' . uniqid();
-        }
-
-        return $item;
-    }
-
     protected function pages(): array
     {
         return [

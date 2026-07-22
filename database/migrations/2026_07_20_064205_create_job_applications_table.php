@@ -22,6 +22,7 @@ return new class extends Migration
             $table->softDeletes();
             
             $table->unique(['job_vacancy_id', 'user_id']);
+            $table->index('created_at');
         });
     }
 

@@ -12,13 +12,14 @@ class MasterController extends Controller
 {
     public function getMajors(): JsonResponse
     {
-        $majors = Cache::remember('master_majors', now()->addDay(), function () {
-            return MasterMajor::orderBy('name', 'asc')->get();
+        $data = Cache::remember('master_majors', now()->addDay(), function () {
+            $majors = MasterMajor::orderBy('name', 'asc')->get();
+            return MasterMajorResource::collection($majors)->resolve();
         });
 
         return $this->successResponse(
             'Daftar jurusan berhasil dimuat.', 
-            MasterMajorResource::collection($majors)
+            $data
         );
     }
 
@@ -45,6 +46,16 @@ class MasterController extends Controller
                         ['value' => 'umr_-_5_juta', 'label' => 'UMR - 5 Juta'],
                         ['value' => '5_-_10_juta', 'label' => '5 - 10 Juta'],
                         ['value' => '>_10_juta', 'label' => '> 10 Juta'],
+                    ],
+                    'is_linear' => [
+                        ['value' => true, 'label' => 'Ya, Sesuai Jurusan'],
+                        ['value' => false, 'label' => 'Tidak Sesuai'],
+                    ],
+                ],
+                'kuliah' => [
+                    'is_linear' => [
+                        ['value' => true, 'label' => 'Ya, Sesuai Jurusan'],
+                        ['value' => false, 'label' => 'Tidak Sesuai'],
                     ],
                 ],
                 'wirausaha' => [

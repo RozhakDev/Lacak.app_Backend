@@ -18,6 +18,7 @@ class User extends Authenticatable
         'email_verified_at',
         'nisn',
         'password',
+        'avatar',
     ];
 
     protected $hidden = [

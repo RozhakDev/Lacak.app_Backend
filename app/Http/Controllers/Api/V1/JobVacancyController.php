@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Services\JobVacancyService;
 use App\Http\Resources\JobVacancyResource;
+use App\Http\Requests\JobVacancy\ApplyJobRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -45,12 +46,8 @@ class JobVacancyController extends Controller
         }
     }
 
-    public function apply(Request $request, $id): JsonResponse
+    public function apply(ApplyJobRequest $request, $id): JsonResponse
     {
-        $request->validate([
-            'cv' => 'required|file|mimes:pdf,doc,docx|max:5120',
-            'cover_letter' => 'nullable|string|max:1000',
-        ]);
 
         try {
             $application = $this->jobService->applyToJob(
@@ -73,10 +70,7 @@ class JobVacancyController extends Controller
 
     public function myApplications(Request $request): JsonResponse
     {
-        $applications = \App\Models\JobApplication::with('jobVacancy')
-            ->where('user_id', auth()->id())
-            ->latest()
-            ->paginate(10);
+        $applications = $this->jobService->getMyApplications(auth()->id());
 
         $formatted = $applications->through(function ($app) {
             return [
