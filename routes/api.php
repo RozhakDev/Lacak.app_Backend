@@ -26,11 +26,11 @@ Route::get('/login', function () {
 Route::prefix('v1')->middleware('throttle:60,1')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
-        Route::middleware('throttle:5,1')->post('/login', [AuthController::class, 'login']);
-        Route::middleware('throttle:3,1')->post('/forgot-password', [AuthController::class, 'forgotPassword']);
+        Route::middleware('throttle:5,1,login')->post('/login', [AuthController::class, 'login']);
+        Route::middleware('throttle:3,1,forgot-password')->post('/forgot-password', [AuthController::class, 'forgotPassword']);
         Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
         Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-        Route::middleware('throttle:3,1')->post('/resend-otp', [AuthController::class, 'resendOtp']);
+        Route::middleware('throttle:3,1,resend-otp')->post('/resend-otp', [AuthController::class, 'resendOtp']);
 
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
     });

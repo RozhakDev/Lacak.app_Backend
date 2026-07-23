@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AlumniExperience extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'alumni_profile_id',
         'company_name',
