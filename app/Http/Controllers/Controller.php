@@ -11,8 +11,8 @@ use OpenApi\Attributes as OA;
     title: "Lacak.app API Documentation"
 )]
 #[OA\Server(
-    url: L5_SWAGGER_CONST_HOST,
-    description: "API Server"
+    url: "/",
+    description: "API Server (Dynamic Host)"
 )]
 #[OA\SecurityScheme(
     securityScheme: "sanctum",
