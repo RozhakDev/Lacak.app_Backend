@@ -292,18 +292,6 @@ class SwaggerDocs
     public function submitTracer() {}
 
     #[OA\Get(
-        path: "/api/v1/tracer/export",
-        summary: "Ekspor Laporan Tracer (Excel)",
-        description: "Menghasilkan format berkas Excel (.xlsx) murni yang merangkum keseluruhan entri partisipasi Tracer Study untuk pelaporan akreditasi BKK.",
-        security: [["sanctum" => []]],
-        tags: ["Tracer Study"],
-        responses: [
-            new OA\Response(response: 200, description: "Stream unduhan berkas biner Excel.")
-        ]
-    )]
-    public function exportTracer() {}
-
-    #[OA\Get(
         path: "/api/v1/master/majors",
         summary: "Daftar Master Konsentrasi Jurusan",
         description: "Menampilkan senarai referensi statis untuk atribut Jurusan di SMK (contoh: TKJ, RPL, TKR). Diperuntukkan sebagai pengisi opsi dropdown pada Frontend.",

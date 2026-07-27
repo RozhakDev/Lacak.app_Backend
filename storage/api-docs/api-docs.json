@@ -642,26 +642,6 @@
                 ]
             }
         },
-        "/api/v1/tracer/export": {
-            "get": {
-                "tags": [
-                    "Tracer Study"
-                ],
-                "summary": "Ekspor Laporan Tracer (Excel)",
-                "description": "Menghasilkan format berkas Excel (.xlsx) murni yang merangkum keseluruhan entri partisipasi Tracer Study untuk pelaporan akreditasi BKK.",
-                "operationId": "af77f29bad946d9ecd92dc550da826f6",
-                "responses": {
-                    "200": {
-                        "description": "Stream unduhan berkas biner Excel."
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
         "/api/v1/master/majors": {
             "get": {
                 "tags": [
