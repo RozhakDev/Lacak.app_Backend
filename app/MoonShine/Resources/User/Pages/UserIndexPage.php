@@ -32,7 +32,8 @@ class UserIndexPage extends IndexPage
             Text::make('Nama Lengkap', 'name')->sortable(),
             Email::make('Email', 'email')->sortable(),
             Text::make('NISN', 'nisn')->sortable(),
-            BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class),
+            BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class)
+                ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
             BelongsToMany::make('Hak Akses', 'roles', 'name', RoleResource::class)
                 ->badge('purple'),
         ];

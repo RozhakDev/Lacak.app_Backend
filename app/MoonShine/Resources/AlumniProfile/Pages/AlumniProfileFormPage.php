@@ -18,9 +18,6 @@ use Throwable;
 
 class AlumniProfileFormPage extends FormPage
 {
-    /**
-     * @return list<ComponentContract|FieldContract>
-     */
     protected function fields(): iterable
     {
         return [
@@ -45,20 +42,11 @@ class AlumniProfileFormPage extends FormPage
         return [];
     }
 
-    /**
-     * @param  FormBuilder  $component
-     *
-     * @return FormBuilder
-     */
     protected function modifyFormComponent(FormBuilderContract $component): FormBuilderContract
     {
         return $component;
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function topLayer(): array
     {
         return [
@@ -66,10 +54,6 @@ class AlumniProfileFormPage extends FormPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function mainLayer(): array
     {
         return [
@@ -77,10 +61,6 @@ class AlumniProfileFormPage extends FormPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function bottomLayer(): array
     {
         return [

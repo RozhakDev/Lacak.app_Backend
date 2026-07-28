@@ -21,6 +21,7 @@ use App\MoonShine\Resources\Role\RoleResource;
 use App\MoonShine\Resources\JobApplication\JobApplicationResource;
 use App\MoonShine\Resources\Event\EventResource;
 use App\MoonShine\Resources\EventParticipant\EventParticipantResource;
+use MoonShine\UI\Components\Badge;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -68,5 +69,23 @@ final class MoonShineLayout extends AppLayout
     protected function hasThemes(): bool
     {
         return false;
+    }
+
+    protected function sidebarTopSlot(): array
+    {
+        $user = auth()->user();
+        
+        if (!$user) {
+            return [];
+        }
+
+        $schoolName = $user->hasRole('Super Admin') 
+            ? 'Pusat (Super Admin)' 
+            : ($user->school ? $user->school->name : 'Administrator');
+
+        return [
+            Badge::make($schoolName, 'primary')
+                ->class('w-full text-center mt-4 mb-2 px-2 py-2 text-xs font-bold uppercase tracking-wider'),
+        ];
     }
 }

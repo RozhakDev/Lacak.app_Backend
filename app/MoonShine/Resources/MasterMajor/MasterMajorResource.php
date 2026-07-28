@@ -14,6 +14,8 @@ use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
+use App\MoonShine\Resources\School\SchoolResource;
 
 class MasterMajorResource extends ModelResource
 {
@@ -49,6 +51,8 @@ class MasterMajorResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
+            BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class)
+                ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
             Text::make('Kode Jurusan', 'code')
                 ->required(),
             Text::make('Nama Jurusan', 'name')

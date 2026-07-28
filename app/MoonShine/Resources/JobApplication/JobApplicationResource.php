@@ -12,6 +12,8 @@ use App\MoonShine\Resources\JobApplication\Pages\JobApplicationDetailPage;
 
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
+use App\MoonShine\Resources\JobVacancy\JobVacancyResource;
+use App\MoonShine\Resources\User\UserResource;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Textarea;
@@ -49,8 +51,8 @@ class JobApplicationResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Lowongan', 'jobVacancy', 'title', \App\MoonShine\Resources\JobVacancy\JobVacancyResource::class)->sortable(),
-            BelongsTo::make('Pelamar', 'user', 'name', \App\MoonShine\Resources\User\UserResource::class)->sortable(),
+            BelongsTo::make('Lowongan', 'jobVacancy', 'title', JobVacancyResource::class)->sortable(),
+            BelongsTo::make('Pelamar', 'user', 'name', UserResource::class)->sortable(),
             File::make('CV', 'cv_url')->disk('public')->dir('job_applications/cv'),
             Select::make('Status', 'status')->options([
                 'pending' => 'Menunggu Review',
@@ -64,8 +66,8 @@ class JobApplicationResource extends ModelResource
     protected function formFields(): iterable
     {
         return [
-            BelongsTo::make('Lowongan', 'jobVacancy', 'title', \App\MoonShine\Resources\JobVacancy\JobVacancyResource::class)->required(),
-            BelongsTo::make('Pelamar', 'user', 'name', \App\MoonShine\Resources\User\UserResource::class)->required(),
+            BelongsTo::make('Lowongan', 'jobVacancy', 'title', JobVacancyResource::class)->required(),
+            BelongsTo::make('Pelamar', 'user', 'name', UserResource::class)->required(),
             File::make('CV', 'cv_url')->disk('public')->dir('job_applications/cv'),
             Textarea::make('Cover Letter', 'cover_letter')->nullable(),
             Select::make('Status', 'status')->options([
@@ -81,8 +83,8 @@ class JobApplicationResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Lowongan', 'jobVacancy', 'title', \App\MoonShine\Resources\JobVacancy\JobVacancyResource::class),
-            BelongsTo::make('Pelamar', 'user', 'name', \App\MoonShine\Resources\User\UserResource::class),
+            BelongsTo::make('Lowongan', 'jobVacancy', 'title', JobVacancyResource::class),
+            BelongsTo::make('Pelamar', 'user', 'name', UserResource::class),
             File::make('CV', 'cv_url')->disk('public')->dir('job_applications/cv'),
             Textarea::make('Cover Letter', 'cover_letter')->nullable(),
             Select::make('Status', 'status')->options([

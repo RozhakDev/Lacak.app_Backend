@@ -35,10 +35,10 @@ class UserFormPage extends FormPage
                 Text::make('NISN', 'nisn')->nullable(),
                 Password::make('Password', 'password')
                     ->hint('Kosongkan jika tidak ingin mengubah password.')
-                    ->canSee(fn(\MoonShine\UI\Fields\Password $field) => request()->route('resourceItem')),
+                    ->canSee(fn(Password $field) => request()->route('resourceItem')),
                 Password::make('Password', 'password')
                     ->required()
-                    ->canSee(fn(\MoonShine\UI\Fields\Password $field) => !request()->route('resourceItem')),
+                    ->canSee(fn(Password $field) => !request()->route('resourceItem')),
                 BelongsToMany::make('Hak Akses', 'roles', 'name', RoleResource::class)
                     ->selectMode(),
                 BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class)

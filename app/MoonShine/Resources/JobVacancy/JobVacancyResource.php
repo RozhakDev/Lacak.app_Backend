@@ -20,6 +20,8 @@ use MoonShine\UI\Fields\Textarea;
 use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Date;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
+use App\MoonShine\Resources\School\SchoolResource;
+use App\MoonShine\Resources\User\UserResource;
 
 class JobVacancyResource extends ModelResource
 {
@@ -39,7 +41,9 @@ class JobVacancyResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Dibuat Oleh', 'creator', 'name', \App\MoonShine\Resources\User\UserResource::class),
+            BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class)
+                ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
+            BelongsTo::make('Dibuat Oleh', 'creator', 'name', UserResource::class),
             Image::make('Poster/Gambar', 'images')->multiple()->disk('public')->dir('jobs'),
             Text::make('Judul Lowongan', 'title')->required(),
             Text::make('Nama Perusahaan', 'company_name')->required(),
@@ -65,7 +69,9 @@ class JobVacancyResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Dibuat Oleh', 'creator', 'name', \App\MoonShine\Resources\User\UserResource::class),
+            BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class)
+                ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
+            BelongsTo::make('Dibuat Oleh', 'creator', 'name', UserResource::class),
             Image::make('Poster/Gambar', 'images')->multiple()->disk('public')->dir('jobs'),
             Text::make('Judul Lowongan', 'title')->required(),
             Text::make('Nama Perusahaan', 'company_name')->required(),

@@ -13,6 +13,8 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Image;
 use MoonShine\UI\Fields\Switcher;
+use MoonShine\Support\ListOf;
+use MoonShine\Support\Enums\Action;
 
 class SchoolResource extends ModelResource
 {
@@ -30,19 +32,19 @@ class SchoolResource extends ModelResource
         ];
     }
 
-    protected function activeActions(): \MoonShine\Support\ListOf
+    protected function activeActions(): ListOf
     {
         if (auth()->user()->hasRole('Admin BKK')) {
-            return new \MoonShine\Support\ListOf(\MoonShine\Support\Enums\Action::class, [
-                \MoonShine\Support\Enums\Action::VIEW,
-                \MoonShine\Support\Enums\Action::UPDATE,
+            return new ListOf(Action::class, [
+                Action::VIEW,
+                Action::UPDATE,
             ]);
         }
-        return new \MoonShine\Support\ListOf(\MoonShine\Support\Enums\Action::class, [
-            \MoonShine\Support\Enums\Action::CREATE,
-            \MoonShine\Support\Enums\Action::VIEW,
-            \MoonShine\Support\Enums\Action::UPDATE,
-            \MoonShine\Support\Enums\Action::DELETE,
+        return new ListOf(Action::class, [
+            Action::CREATE,
+            Action::VIEW,
+            Action::UPDATE,
+            Action::DELETE,
         ]);
     }
 

@@ -14,6 +14,8 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\File;
 use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Textarea;
+use App\MoonShine\Resources\JobVacancy\JobVacancyResource;
+use App\MoonShine\Resources\User\UserResource;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use App\MoonShine\Resources\JobApplication\JobApplicationResource;
 use MoonShine\Support\ListOf;
@@ -25,8 +27,8 @@ class JobApplicationFormPage extends FormPage
     protected function fields(): iterable
     {
         return [
-            BelongsTo::make('Lowongan', 'jobVacancy', 'title', \App\MoonShine\Resources\JobVacancy\JobVacancyResource::class)->required(),
-            BelongsTo::make('Pelamar', 'user', 'name', \App\MoonShine\Resources\User\UserResource::class)->required(),
+            BelongsTo::make('Lowongan', 'jobVacancy', 'title', JobVacancyResource::class)->required(),
+            BelongsTo::make('Pelamar', 'user', 'name', UserResource::class)->required(),
             File::make('CV', 'cv_url')->disk('public')->dir('job_applications/cv'),
             Textarea::make('Cover Letter', 'cover_letter')->nullable(),
             Select::make('Status', 'status')->options([

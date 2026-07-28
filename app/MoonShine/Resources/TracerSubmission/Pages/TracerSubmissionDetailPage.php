@@ -11,6 +11,8 @@ use MoonShine\Contracts\UI\FieldContract;
 use App\MoonShine\Resources\TracerSubmission\TracerSubmissionResource;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
+use MoonShine\Contracts\UI\ActionButtonContract;
+use MoonShine\UI\Components\ActionButton;
 use Throwable;
 
 class TracerSubmissionDetailPage extends DetailPage
@@ -22,9 +24,9 @@ class TracerSubmissionDetailPage extends DetailPage
         return parent::buttons();
     }
 
-    protected function modifyEditButton(\MoonShine\Contracts\UI\ActionButtonContract $button): \MoonShine\Contracts\UI\ActionButtonContract
+    protected function modifyEditButton(ActionButtonContract $button): ActionButtonContract
     {
-        return \MoonShine\UI\Components\ActionButton::emptyHidden();
+        return ActionButton::emptyHidden();
     }
 
     protected function modifyDetailComponent(ComponentContract $component): ComponentContract

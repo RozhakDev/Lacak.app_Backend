@@ -13,6 +13,9 @@ use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\File;
 use MoonShine\UI\Fields\Select;
+use MoonShine\UI\Fields\Text;
+use App\MoonShine\Resources\JobVacancy\JobVacancyResource;
+use App\MoonShine\Resources\User\UserResource;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use App\MoonShine\Resources\JobApplication\JobApplicationResource;
 use MoonShine\Support\ListOf;
@@ -26,8 +29,10 @@ class JobApplicationIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Lowongan', 'jobVacancy', 'title', \App\MoonShine\Resources\JobVacancy\JobVacancyResource::class)->sortable(),
-            BelongsTo::make('Pelamar', 'user', 'name', \App\MoonShine\Resources\User\UserResource::class)->sortable(),
+            Text::make('Sekolah', 'school_name', fn($item) => $item->jobVacancy?->school?->name ?? '-')
+                ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
+            BelongsTo::make('Lowongan', 'jobVacancy', 'title', JobVacancyResource::class)->sortable(),
+            BelongsTo::make('Pelamar', 'user', 'name', UserResource::class)->sortable(),
             File::make('CV', 'cv_url')->disk('public')->dir('job_applications/cv'),
             Select::make('Status', 'status')->options([
                 'pending' => 'Menunggu Review',

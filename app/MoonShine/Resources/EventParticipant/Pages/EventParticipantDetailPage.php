@@ -11,6 +11,8 @@ use MoonShine\UI\Fields\Select;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Contracts\UI\FieldContract;
 use App\MoonShine\Resources\EventParticipant\EventParticipantResource;
+use App\MoonShine\Resources\Event\EventResource;
+use App\MoonShine\Resources\User\UserResource;
 
 class EventParticipantDetailPage extends DetailPage
 {
@@ -18,8 +20,8 @@ class EventParticipantDetailPage extends DetailPage
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Event', 'event', 'title', \App\MoonShine\Resources\Event\EventResource::class),
-            BelongsTo::make('Peserta', 'user', 'name', \App\MoonShine\Resources\User\UserResource::class),
+            BelongsTo::make('Event', 'event', 'title', EventResource::class),
+            BelongsTo::make('Peserta', 'user', 'name', UserResource::class),
             Text::make('Status', 'status'),
         ];
     }

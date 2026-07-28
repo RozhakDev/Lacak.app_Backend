@@ -11,6 +11,11 @@ use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Fields\ID;
+use MoonShine\UI\Fields\Text;
+use MoonShine\UI\Fields\Image;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
+use App\MoonShine\Resources\User\UserResource;
+use App\MoonShine\Resources\MasterMajor\MasterMajorResource;
 use App\MoonShine\Resources\AlumniProfile\AlumniProfileResource;
 use MoonShine\Support\ListOf;
 use Throwable;
@@ -23,11 +28,13 @@ class AlumniProfileIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
-            \MoonShine\UI\Fields\Image::make('Foto', 'avatar_url')->disk('public'),
-            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Nama', 'user', 'name', \App\MoonShine\Resources\User\UserResource::class),
-            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Jurusan', 'major', 'name', \App\MoonShine\Resources\MasterMajor\MasterMajorResource::class),
-            \MoonShine\UI\Fields\Text::make('Tahun Lulus', 'graduation_year')->sortable(),
-            \MoonShine\UI\Fields\Text::make('No. HP', 'phone_number'),
+            Text::make('Sekolah', 'school_name', fn($item) => $item->user?->school?->name ?? '-')
+                ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
+            Image::make('Foto', 'avatar_url')->disk('public'),
+            BelongsTo::make('Nama', 'user', 'name', UserResource::class),
+            BelongsTo::make('Jurusan', 'major', 'name', MasterMajorResource::class),
+            Text::make('Tahun Lulus', 'graduation_year')->sortable(),
+            Text::make('No. HP', 'phone_number'),
         ];
     }
 

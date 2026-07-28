@@ -12,6 +12,8 @@ use MoonShine\UI\Fields\File;
 use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Textarea;
 use MoonShine\UI\Fields\Preview;
+use App\MoonShine\Resources\JobVacancy\JobVacancyResource;
+use App\MoonShine\Resources\User\UserResource;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use App\MoonShine\Resources\JobApplication\JobApplicationResource;
 use MoonShine\Support\ListOf;
@@ -23,8 +25,8 @@ class JobApplicationDetailPage extends DetailPage
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Lowongan', 'jobVacancy', 'title', \App\MoonShine\Resources\JobVacancy\JobVacancyResource::class),
-            BelongsTo::make('Pelamar', 'user', 'name', \App\MoonShine\Resources\User\UserResource::class),
+            BelongsTo::make('Lowongan', 'jobVacancy', 'title', JobVacancyResource::class),
+            BelongsTo::make('Pelamar', 'user', 'name', UserResource::class),
             Preview::make('Profil & Keahlian Kandidat', 'user_id', function ($item) {
                 if (!$item->user || !$item->user->alumniProfile) return 'Belum melengkapi profil.';
                 $profile = $item->user->alumniProfile;

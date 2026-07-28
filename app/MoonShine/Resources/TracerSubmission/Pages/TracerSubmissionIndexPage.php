@@ -10,6 +10,9 @@ use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
+use MoonShine\Contracts\UI\ActionButtonContract;
+use MoonShine\UI\Components\ActionButton;
+use MoonShine\UI\Components\ActionGroup;
 use MoonShine\UI\Fields\ID;
 use App\MoonShine\Resources\TracerSubmission\TracerSubmissionResource;
 use MoonShine\Support\ListOf;
@@ -29,14 +32,14 @@ class TracerSubmissionIndexPage extends IndexPage
         return [];
     }
 
-    protected function modifyCreateButton(\MoonShine\Contracts\UI\ActionButtonContract $button): \MoonShine\Contracts\UI\ActionButtonContract
+    protected function modifyCreateButton(ActionButtonContract $button): ActionButtonContract
     {
-        return \MoonShine\UI\Components\ActionButton::emptyHidden();
+        return ActionButton::emptyHidden();
     }
 
-    protected function modifyEditButton(\MoonShine\Contracts\UI\ActionButtonContract $button): \MoonShine\Contracts\UI\ActionButtonContract
+    protected function modifyEditButton(ActionButtonContract $button): ActionButtonContract
     {
-        return \MoonShine\UI\Components\ActionButton::emptyHidden();
+        return ActionButton::emptyHidden();
     }
 
     protected function queryTags(): array
@@ -58,8 +61,8 @@ class TracerSubmissionIndexPage extends IndexPage
     {
         return [
             ...parent::topLayer(),
-            \MoonShine\UI\Components\ActionGroup::make([
-                \MoonShine\UI\Components\ActionButton::make('Export XLSX (Excel)', route('export.tracer.csv'))
+            ActionGroup::make([
+                ActionButton::make('Export XLSX (Excel)', route('export.tracer.csv'))
                     ->icon('document-arrow-down')
                     ->success()
             ])

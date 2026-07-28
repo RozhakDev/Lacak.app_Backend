@@ -86,6 +86,8 @@ class TracerSubmissionResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
+            Text::make('Sekolah', 'school_name', fn($item) => $item->alumniProfile?->user?->school?->name ?? '-')
+                ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
             BelongsTo::make('Alumni', 'alumniProfile', function($profile) {
                 return $profile->user->name . ' (' . $profile->user->nisn . ')';
             }),

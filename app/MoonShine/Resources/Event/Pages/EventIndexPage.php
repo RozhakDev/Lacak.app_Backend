@@ -13,6 +13,8 @@ use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Date;
 use MoonShine\Contracts\UI\FieldContract;
 use App\MoonShine\Resources\Event\EventResource;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
+use App\MoonShine\Resources\School\SchoolResource;
 
 class EventIndexPage extends IndexPage
 {
@@ -20,6 +22,8 @@ class EventIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
+            BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class)
+                ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
             Image::make('Banner', 'banner_url')->disk('public')->dir('events'),
             Text::make('Judul', 'title')->sortable(),
             Select::make('Tipe Event', 'event_type')->options([
