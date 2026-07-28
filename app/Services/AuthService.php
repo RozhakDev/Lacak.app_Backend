@@ -22,6 +22,7 @@ class AuthService
                 'nisn' => $data['nisn'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
+                'school_id' => $data['school_id'],
             ]);
 
             $user->assignRole('User');

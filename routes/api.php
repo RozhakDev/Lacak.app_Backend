@@ -67,6 +67,7 @@ Route::prefix('v1')->middleware('throttle:60,1')->group(function () {
     });
 
     Route::prefix('master')->group(function () {
+        Route::get('/schools', [MasterController::class, 'getSchools']);
         Route::get('/majors', [MasterController::class, 'getMajors']);
         Route::get('/tracer-options', [MasterController::class, 'getTracerOptions']);
     });

@@ -18,6 +18,7 @@ class RegisterRequest extends FormRequest
             'nisn' => ['required', 'string', 'unique:users,nisn'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'school_id' => ['required', 'exists:schools,id'],
         ];
     }
 

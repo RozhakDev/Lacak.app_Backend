@@ -45,7 +45,8 @@
                                     "email",
                                     "nisn",
                                     "password",
-                                    "password_confirmation"
+                                    "password_confirmation",
+                                    "school_id"
                                 ],
                                 "properties": {
                                     "name": {
@@ -70,6 +71,11 @@
                                         "type": "string",
                                         "format": "password",
                                         "example": "Secret123!"
+                                    },
+                                    "school_id": {
+                                        "description": "ID sekolah tempat alumni lulus. Diambil dari endpoint master schools.",
+                                        "type": "integer",
+                                        "example": 1
                                     }
                                 },
                                 "type": "object"
@@ -640,6 +646,21 @@
                         "sanctum": []
                     }
                 ]
+            }
+        },
+        "/api/v1/master/schools": {
+            "get": {
+                "tags": [
+                    "Master Data"
+                ],
+                "summary": "Daftar Sekolah Tersedia",
+                "description": "Mengembalikan daftar semua sekolah aktif yang terdaftar di dalam platform. Diperuntukkan bagi dropdown pada form registrasi awal alumni.",
+                "operationId": "3066775fb4796d633e565b41ad4a785d",
+                "responses": {
+                    "200": {
+                        "description": "Sukses mengambil list sekolah."
+                    }
+                }
             }
         },
         "/api/v1/master/majors": {

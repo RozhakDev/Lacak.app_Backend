@@ -20,6 +20,7 @@ class EventService
             });
 
         if (auth()->check()) {
+            $query->where('school_id', auth()->user()->school_id);
             $query->withExists(['participants as is_registered' => function ($q) {
                 $q->where('user_id', auth()->id());
             }]);
@@ -37,6 +38,7 @@ class EventService
         $query = Event::with('creator')->where('is_active', true);
 
         if (auth()->check()) {
+            $query->where('school_id', auth()->user()->school_id);
             $query->withExists(['participants as is_registered' => function ($q) {
                 $q->where('user_id', auth()->id());
             }]);

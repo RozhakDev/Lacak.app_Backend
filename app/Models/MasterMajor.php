@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasSchoolScope;
+use Illuminate\Support\Facades\Cache;
 
 class MasterMajor extends Model
 {
@@ -16,6 +17,17 @@ class MasterMajor extends Model
         'name',
         'code',
     ];
+
+    protected static function booted()
+    {
+        static::saved(function ($model) {
+            Cache::forget("master_majors_{$model->school_id}");
+        });
+
+        static::deleted(function ($model) {
+            Cache::forget("master_majors_{$model->school_id}");
+        });
+    }
 
     public function alumniProfiles()
     {

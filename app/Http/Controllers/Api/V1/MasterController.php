@@ -10,9 +10,27 @@ use Illuminate\Support\Facades\Cache;
 
 class MasterController extends Controller
 {
+    public function getSchools(): JsonResponse
+    {
+        $data = Cache::rememberForever('master_schools_active', function () {
+            return \App\Models\School::where('is_active', true)
+                ->select('id', 'name')
+                ->orderBy('name')
+                ->get()
+                ->toArray();
+        });
+
+        return $this->successResponse(
+            'Data sekolah berhasil dimuat.',
+            $data
+        );
+    }
     public function getMajors(): JsonResponse
     {
-        $data = Cache::remember('master_majors', now()->addDay(), function () {
+        $tenantId = auth()->check() ? auth()->user()->school_id : 'guest';
+        $cacheKey = "master_majors_{$tenantId}";
+
+        $data = Cache::rememberForever($cacheKey, function () {
             $majors = MasterMajor::orderBy('name', 'asc')->get();
             return MasterMajorResource::collection($majors)->resolve();
         });

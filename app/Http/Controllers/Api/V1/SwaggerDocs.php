@@ -14,13 +14,14 @@ class SwaggerDocs
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ["name", "email", "nisn", "password", "password_confirmation"],
+                required: ["name", "email", "nisn", "password", "password_confirmation", "school_id"],
                 properties: [
                     new OA\Property(property: "name", type: "string", example: "Ahmad Budi Santoso"),
                     new OA\Property(property: "email", type: "string", format: "email", example: "alumni@smk-contoh.sch.id"),
                     new OA\Property(property: "nisn", type: "string", example: "0011223344"),
                     new OA\Property(property: "password", type: "string", format: "password", example: "Secret123!"),
-                    new OA\Property(property: "password_confirmation", type: "string", format: "password", example: "Secret123!")
+                    new OA\Property(property: "password_confirmation", type: "string", format: "password", example: "Secret123!"),
+                    new OA\Property(property: "school_id", type: "integer", example: 1, description: "ID sekolah tempat alumni lulus. Diambil dari endpoint master schools.")
                 ]
             )
         ),
@@ -290,6 +291,17 @@ class SwaggerDocs
         ]
     )]
     public function submitTracer() {}
+
+    #[OA\Get(
+        path: "/api/v1/master/schools",
+        summary: "Daftar Sekolah Tersedia",
+        description: "Mengembalikan daftar semua sekolah aktif yang terdaftar di dalam platform. Diperuntukkan bagi dropdown pada form registrasi awal alumni.",
+        tags: ["Master Data"],
+        responses: [
+            new OA\Response(response: 200, description: "Sukses mengambil list sekolah.")
+        ]
+    )]
+    public function getSchools() {}
 
     #[OA\Get(
         path: "/api/v1/master/majors",

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class School extends Model
 {
@@ -12,6 +13,17 @@ class School extends Model
     protected $fillable = [
         'name', 'code', 'email', 'phone', 'address', 'logo', 'is_active'
     ];
+
+    protected static function booted()
+    {
+        static::saved(function ($model) {
+            Cache::forget('master_schools_active');
+        });
+
+        static::deleted(function ($model) {
+            Cache::forget('master_schools_active');
+        });
+    }
 
     public function users()
     {
