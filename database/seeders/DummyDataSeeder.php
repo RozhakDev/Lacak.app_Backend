@@ -26,8 +26,14 @@ class DummyDataSeeder extends Seeder
             return;
         }
 
-        $password = Hash::make('password123');
+        $password = Hash::make('User#123');
         $statuses = ['bekerja', 'kuliah', 'wirausaha'];
+
+        $schools = \App\Models\School::all();
+        if ($schools->isEmpty()) {
+            $this->command->warn('Tabel schools kosong. Melewatkan seeding.');
+            return;
+        }
 
         for ($i = 0; $i < 50; $i++) {
             $user = User::create([
@@ -36,14 +42,18 @@ class DummyDataSeeder extends Seeder
                 'nisn' => $faker->unique()->numerify('##########'),
                 'password' => $password,
                 'email_verified_at' => Carbon::now(),
+                'school_id' => $schools->random()->id,
             ]);
 
             $user->assignRole('User');
 
             if ($faker->boolean(80)) {
+                $schoolMajors = MasterMajor::where('school_id', $user->school_id)->pluck('id')->toArray();
+                $majorId = !empty($schoolMajors) ? $faker->randomElement($schoolMajors) : $faker->randomElement($majors);
+
                 $alumniProfile = AlumniProfile::create([
                     'user_id' => $user->id,
-                    'major_id' => $faker->randomElement($majors),
+                    'major_id' => $majorId,
                     'graduation_year' => $faker->numberBetween(2018, 2024),
                     'phone_number' => $faker->numerify('08##########'),
                 ]);

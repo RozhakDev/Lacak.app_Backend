@@ -6,9 +6,6 @@ use App\Models\OtpCode;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<OtpCode>
- */
 class OtpCodeFactory extends Factory
 {
     protected $model = OtpCode::class;

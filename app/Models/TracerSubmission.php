@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasRelatedSchoolScope;
 
 class TracerSubmission extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasRelatedSchoolScope;
 
     protected $fillable = [
         'alumni_profile_id',
@@ -41,5 +42,10 @@ class TracerSubmission extends Model
     public function entrepreneur()
     {
         return $this->hasOne(TracerEntrepreneur::class);
+    }
+
+    public function getSchoolRelationPath()
+    {
+        return 'alumniProfile.user';
     }
 }

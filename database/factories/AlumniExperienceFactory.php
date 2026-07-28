@@ -6,9 +6,6 @@ use App\Models\AlumniExperience;
 use App\Models\AlumniProfile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<AlumniExperience>
- */
 class AlumniExperienceFactory extends Factory
 {
     protected $model = AlumniExperience::class;

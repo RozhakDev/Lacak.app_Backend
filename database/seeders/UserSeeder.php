@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $superAdmin = User::firstOrCreate(
@@ -19,18 +16,24 @@ class UserSeeder extends Seeder
                 'name' => 'Super Admin Pusat',
                 'password' => Hash::make('Admin#123'),
                 'email_verified_at' => now(),
+                'school_id' => null,
             ]
         );
         $superAdmin->assignRole('Super Admin');
 
-        $adminBkk = User::firstOrCreate(
-            ['email' => 'bkk@smkbisa.sch.id'],
-            [
-                'name' => 'Admin BKK SMK',
-                'password' => Hash::make('Admin#123'),
-                'email_verified_at' => now(),
-            ]
-        );
-        $adminBkk->assignRole('Admin BKK');
+        $schools = \App\Models\School::all();
+
+        foreach ($schools as $index => $school) {
+            $adminBkk = User::firstOrCreate(
+                ['email' => 'bkk' . ($index + 1) . '@smk.sch.id'],
+                [
+                    'name' => 'Admin BKK ' . $school->name,
+                    'password' => Hash::make('Admin#123'),
+                    'email_verified_at' => now(),
+                    'school_id' => $school->id,
+                ]
+            );
+            $adminBkk->assignRole('Admin BKK');
+        }
     }
 }

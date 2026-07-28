@@ -6,9 +6,6 @@ use App\Models\TracerEntrepreneur;
 use App\Models\TracerSubmission;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<TracerEntrepreneur>
- */
 class TracerEntrepreneurFactory extends Factory
 {
     protected $model = TracerEntrepreneur::class;

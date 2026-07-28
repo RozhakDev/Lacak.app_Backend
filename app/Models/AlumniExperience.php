@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasRelatedSchoolScope;
 
 class AlumniExperience extends Model
 {
-    use HasFactory;
+    use HasFactory, HasRelatedSchoolScope;
 
     protected $fillable = [
         'alumni_profile_id',
@@ -28,5 +29,10 @@ class AlumniExperience extends Model
     public function alumniProfile()
     {
         return $this->belongsTo(AlumniProfile::class);
+    }
+
+    public function getSchoolRelationPath()
+    {
+        return 'alumniProfile.user';
     }
 }

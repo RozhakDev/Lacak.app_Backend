@@ -7,9 +7,6 @@ use App\Models\User;
 use App\Models\MasterMajor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<AlumniProfile>
- */
 class AlumniProfileFactory extends Factory
 {
     protected $model = AlumniProfile::class;

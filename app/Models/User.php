@@ -7,12 +7,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Traits\HasSchoolScope;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasSchoolScope;
 
     protected $fillable = [
+        'school_id',
         'name',
         'email',
         'email_verified_at',
@@ -47,5 +49,10 @@ class User extends Authenticatable
     public function jobApplications()
     {
         return $this->hasMany(JobApplication::class);
+    }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
     }
 }

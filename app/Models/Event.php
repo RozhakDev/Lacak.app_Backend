@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasSchoolScope;
 
 class Event extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasSchoolScope;
 
     protected static function booted()
     {
@@ -23,6 +24,7 @@ class Event extends Model
     }
 
     protected $fillable = [
+        'school_id',
         'created_by',
         'title',
         'slug',
@@ -50,5 +52,10 @@ class Event extends Model
     public function participants()
     {
         return $this->hasMany(EventParticipant::class);
+    }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
     }
 }

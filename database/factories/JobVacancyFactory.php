@@ -6,9 +6,6 @@ use App\Models\JobVacancy;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<JobVacancy>
- */
 class JobVacancyFactory extends Factory
 {
     protected $model = JobVacancy::class;
@@ -16,6 +13,7 @@ class JobVacancyFactory extends Factory
     public function definition(): array
     {
         return [
+            'school_id' => \App\Models\School::factory(),
             'created_by' => User::factory(),
             'title' => fake()->jobTitle(),
             'company_name' => fake()->company(),
