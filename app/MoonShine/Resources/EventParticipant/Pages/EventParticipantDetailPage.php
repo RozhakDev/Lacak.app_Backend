@@ -12,9 +12,6 @@ use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Contracts\UI\FieldContract;
 use App\MoonShine\Resources\EventParticipant\EventParticipantResource;
 
-/**
- * @extends DetailPage<EventParticipantResource>
- */
 class EventParticipantDetailPage extends DetailPage
 {
     protected function fields(): iterable

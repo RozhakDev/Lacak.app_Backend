@@ -14,22 +14,17 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Email;
 use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use App\MoonShine\Resources\Role\RoleResource;
+use App\MoonShine\Resources\School\SchoolResource;
 use App\MoonShine\Resources\User\UserResource;
 use MoonShine\Support\ListOf;
 use Throwable;
 
-
-/**
- * @extends IndexPage<UserResource>
- */
 class UserIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
 
-    /**
-     * @return list<FieldContract>
-     */
     protected function fields(): iterable
     {
         return [
@@ -37,57 +32,37 @@ class UserIndexPage extends IndexPage
             Text::make('Nama Lengkap', 'name')->sortable(),
             Email::make('Email', 'email')->sortable(),
             Text::make('NISN', 'nisn')->sortable(),
+            BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class),
             BelongsToMany::make('Hak Akses', 'roles', 'name', RoleResource::class)
                 ->badge('purple'),
         ];
     }
 
-    /**
-     * @return ListOf<ActionButtonContract>
-     */
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
 
-    /**
-     * @return list<FieldContract>
-     */
     protected function filters(): iterable
     {
         return [];
     }
 
-    /**
-     * @return list<QueryTag>
-     */
     protected function queryTags(): array
     {
         return [];
     }
 
-    /**
-     * @return list<Metric>
-     */
     protected function metrics(): array
     {
         return [];
     }
 
-    /**
-     * @param  TableBuilder  $component
-     *
-     * @return TableBuilder
-     */
     protected function modifyListComponent(ComponentContract $component): ComponentContract
     {
         return $component;
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function topLayer(): array
     {
         return [
@@ -95,10 +70,6 @@ class UserIndexPage extends IndexPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function mainLayer(): array
     {
         return [
@@ -106,10 +77,6 @@ class UserIndexPage extends IndexPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function bottomLayer(): array
     {
         return [

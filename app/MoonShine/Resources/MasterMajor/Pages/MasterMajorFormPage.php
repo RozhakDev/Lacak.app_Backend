@@ -16,15 +16,8 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
 
-
-/**
- * @extends FormPage<MasterMajorResource>
- */
 class MasterMajorFormPage extends FormPage
 {
-    /**
-     * @return list<ComponentContract|FieldContract>
-     */
     protected function fields(): iterable
     {
         return [
@@ -49,20 +42,11 @@ class MasterMajorFormPage extends FormPage
         return [];
     }
 
-    /**
-     * @param  FormBuilder  $component
-     *
-     * @return FormBuilder
-     */
     protected function modifyFormComponent(FormBuilderContract $component): FormBuilderContract
     {
         return $component;
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function topLayer(): array
     {
         return [
@@ -70,10 +54,6 @@ class MasterMajorFormPage extends FormPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function mainLayer(): array
     {
         return [
@@ -81,10 +61,6 @@ class MasterMajorFormPage extends FormPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function bottomLayer(): array
     {
         return [

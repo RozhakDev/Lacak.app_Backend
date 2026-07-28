@@ -15,9 +15,6 @@ use MoonShine\UI\Fields\Date;
 use MoonShine\Contracts\UI\FieldContract;
 use App\MoonShine\Resources\Event\EventResource;
 
-/**
- * @extends FormPage<EventResource>
- */
 class EventFormPage extends FormPage
 {
     protected function fields(): iterable

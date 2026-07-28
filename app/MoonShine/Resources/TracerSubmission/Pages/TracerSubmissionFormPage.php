@@ -16,10 +16,6 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
 
-
-/**
- * @extends FormPage<TracerSubmissionResource>
- */
 class TracerSubmissionFormPage extends FormPage
 {
 
@@ -39,20 +35,11 @@ class TracerSubmissionFormPage extends FormPage
         return [];
     }
 
-    /**
-     * @param  FormBuilder  $component
-     *
-     * @return FormBuilder
-     */
     protected function modifyFormComponent(FormBuilderContract $component): FormBuilderContract
     {
         return $component;
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function topLayer(): array
     {
         return [
@@ -60,10 +47,6 @@ class TracerSubmissionFormPage extends FormPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function mainLayer(): array
     {
         return [
@@ -71,10 +54,6 @@ class TracerSubmissionFormPage extends FormPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function bottomLayer(): array
     {
         return [

@@ -14,9 +14,6 @@ use MoonShine\UI\Fields\Date;
 use MoonShine\Contracts\UI\FieldContract;
 use App\MoonShine\Resources\Event\EventResource;
 
-/**
- * @extends IndexPage<EventResource>
- */
 class EventIndexPage extends IndexPage
 {
     protected function fields(): iterable

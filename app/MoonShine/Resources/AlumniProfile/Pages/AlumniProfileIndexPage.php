@@ -15,17 +15,10 @@ use App\MoonShine\Resources\AlumniProfile\AlumniProfileResource;
 use MoonShine\Support\ListOf;
 use Throwable;
 
-
-/**
- * @extends IndexPage<AlumniProfileResource>
- */
 class AlumniProfileIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
 
-    /**
-     * @return list<FieldContract>
-     */
     protected function fields(): iterable
     {
         return [
@@ -38,52 +31,31 @@ class AlumniProfileIndexPage extends IndexPage
         ];
     }
 
-    /**
-     * @return ListOf<ActionButtonContract>
-     */
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
 
-    /**
-     * @return list<FieldContract>
-     */
     protected function filters(): iterable
     {
         return [];
     }
 
-    /**
-     * @return list<QueryTag>
-     */
     protected function queryTags(): array
     {
         return [];
     }
 
-    /**
-     * @return list<Metric>
-     */
     protected function metrics(): array
     {
         return [];
     }
 
-    /**
-     * @param  TableBuilder  $component
-     *
-     * @return TableBuilder
-     */
     protected function modifyListComponent(ComponentContract $component): ComponentContract
     {
         return $component;
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function topLayer(): array
     {
         return [
@@ -91,10 +63,6 @@ class AlumniProfileIndexPage extends IndexPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function mainLayer(): array
     {
         return [
@@ -102,10 +70,6 @@ class AlumniProfileIndexPage extends IndexPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function bottomLayer(): array
     {
         return [

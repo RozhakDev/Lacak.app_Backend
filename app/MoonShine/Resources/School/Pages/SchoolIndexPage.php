@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\MoonShine\Resources\TracerSubmission\Pages;
+namespace App\MoonShine\Resources\School\Pages;
 
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
@@ -11,13 +11,20 @@ use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Fields\ID;
-use App\MoonShine\Resources\TracerSubmission\TracerSubmissionResource;
+use App\MoonShine\Resources\School\SchoolResource;
 use MoonShine\Support\ListOf;
 use Throwable;
 
-class TracerSubmissionIndexPage extends IndexPage
+class SchoolIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
+
+    protected function fields(): iterable
+    {
+        return [
+            ID::make(),
+        ];
+    }
 
     protected function buttons(): ListOf
     {
@@ -27,16 +34,6 @@ class TracerSubmissionIndexPage extends IndexPage
     protected function filters(): iterable
     {
         return [];
-    }
-
-    protected function modifyCreateButton(\MoonShine\Contracts\UI\ActionButtonContract $button): \MoonShine\Contracts\UI\ActionButtonContract
-    {
-        return \MoonShine\UI\Components\ActionButton::emptyHidden();
-    }
-
-    protected function modifyEditButton(\MoonShine\Contracts\UI\ActionButtonContract $button): \MoonShine\Contracts\UI\ActionButtonContract
-    {
-        return \MoonShine\UI\Components\ActionButton::emptyHidden();
     }
 
     protected function queryTags(): array
@@ -57,12 +54,7 @@ class TracerSubmissionIndexPage extends IndexPage
     protected function topLayer(): array
     {
         return [
-            ...parent::topLayer(),
-            \MoonShine\UI\Components\ActionGroup::make([
-                \MoonShine\UI\Components\ActionButton::make('Export XLSX (Excel)', route('export.tracer.csv'))
-                    ->icon('document-arrow-down')
-                    ->success()
-            ])
+            ...parent::topLayer()
         ];
     }
 

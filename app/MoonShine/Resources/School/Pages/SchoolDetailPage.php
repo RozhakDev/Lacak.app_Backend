@@ -2,28 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\MoonShine\Resources\JobVacancy\Pages;
+namespace App\MoonShine\Resources\School\Pages;
 
-use MoonShine\Laravel\Pages\Crud\FormPage;
+use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Contracts\UI\ComponentContract;
-use MoonShine\Contracts\UI\FormBuilderContract;
-use MoonShine\UI\Components\FormBuilder;
+use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\Contracts\UI\FieldContract;
-use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
-use App\MoonShine\Resources\JobVacancy\JobVacancyResource;
+use App\MoonShine\Resources\School\SchoolResource;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
-use MoonShine\UI\Components\Layout\Box;
 use Throwable;
 
-class JobVacancyFormPage extends FormPage
+class SchoolDetailPage extends DetailPage
 {
     protected function fields(): iterable
     {
         return [
-            Box::make([
-                ID::make(),
-            ]),
+            ID::make(),
         ];
     }
 
@@ -32,17 +27,7 @@ class JobVacancyFormPage extends FormPage
         return parent::buttons();
     }
 
-    protected function formButtons(): ListOf
-    {
-        return parent::formButtons();
-    }
-
-    protected function rules(DataWrapperContract $item): array
-    {
-        return [];
-    }
-
-    protected function modifyFormComponent(FormBuilderContract $component): FormBuilderContract
+    protected function modifyDetailComponent(ComponentContract $component): ComponentContract
     {
         return $component;
     }

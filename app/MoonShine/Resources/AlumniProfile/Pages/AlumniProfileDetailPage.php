@@ -13,15 +13,8 @@ use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use Throwable;
 
-
-/**
- * @extends DetailPage<AlumniProfileResource>
- */
 class AlumniProfileDetailPage extends DetailPage
 {
-    /**
-     * @return list<FieldContract>
-     */
     protected function fields(): iterable
     {
         return [
@@ -45,20 +38,11 @@ class AlumniProfileDetailPage extends DetailPage
         return parent::buttons();
     }
 
-    /**
-     * @param  TableBuilder  $component
-     *
-     * @return TableBuilder
-     */
     protected function modifyDetailComponent(ComponentContract $component): ComponentContract
     {
         return $component;
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function topLayer(): array
     {
         return [
@@ -66,10 +50,6 @@ class AlumniProfileDetailPage extends DetailPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function mainLayer(): array
     {
         return [
@@ -77,10 +57,6 @@ class AlumniProfileDetailPage extends DetailPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function bottomLayer(): array
     {
         return [

@@ -20,15 +20,8 @@ use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
 
-
-/**
- * @extends FormPage<JobApplicationResource>
- */
 class JobApplicationFormPage extends FormPage
 {
-    /**
-     * @return list<ComponentContract|FieldContract>
-     */
     protected function fields(): iterable
     {
         return [
@@ -60,20 +53,11 @@ class JobApplicationFormPage extends FormPage
         return [];
     }
 
-    /**
-     * @param  FormBuilder  $component
-     *
-     * @return FormBuilder
-     */
     protected function modifyFormComponent(FormBuilderContract $component): FormBuilderContract
     {
         return $component;
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function topLayer(): array
     {
         return [
@@ -81,10 +65,6 @@ class JobApplicationFormPage extends FormPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function mainLayer(): array
     {
         return [
@@ -92,10 +72,6 @@ class JobApplicationFormPage extends FormPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function bottomLayer(): array
     {
         return [

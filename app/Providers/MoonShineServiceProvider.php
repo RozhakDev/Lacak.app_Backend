@@ -11,6 +11,7 @@ use MoonShine\Laravel\DependencyInjection\MoonShineConfigurator;
 
 use App\MoonShine\Resources\MasterMajor\MasterMajorResource;
 use App\MoonShine\Resources\JobVacancy\JobVacancyResource;
+use App\MoonShine\Resources\School\SchoolResource;
 use App\MoonShine\Resources\AlumniProfile\AlumniProfileResource;
 use App\MoonShine\Resources\TracerSubmission\TracerSubmissionResource;
 use MoonShine\Laravel\Pages\ProfilePage;
@@ -31,6 +32,7 @@ class MoonShineServiceProvider extends ServiceProvider
         moonshine()->resources([
 
             MasterMajorResource::class,
+            SchoolResource::class,
             JobVacancyResource::class,
             AlumniProfileResource::class,
             TracerSubmissionResource::class,

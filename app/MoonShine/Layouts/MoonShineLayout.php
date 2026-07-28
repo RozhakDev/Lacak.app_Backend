@@ -10,6 +10,7 @@ use MoonShine\ColorManager\ColorManager;
 use MoonShine\Contracts\ColorManager\ColorManagerContract;
 use MoonShine\Contracts\ColorManager\PaletteContract;
 use App\MoonShine\Resources\MasterMajor\MasterMajorResource;
+use App\MoonShine\Resources\School\SchoolResource;
 use MoonShine\MenuManager\MenuItem;
 use App\MoonShine\Resources\JobVacancy\JobVacancyResource;
 use App\MoonShine\Resources\AlumniProfile\AlumniProfileResource;
@@ -41,6 +42,7 @@ final class MoonShineLayout extends AppLayout
             ])->icon('users')->canSee(fn() => auth()->user()->hasRole('Super Admin')),
 
             MenuGroup::make('Data Master', [
+                MenuItem::make(SchoolResource::class, 'Profil Sekolah')->icon('building-library'),
                 MenuItem::make(MasterMajorResource::class, 'Master Jurusan')->icon('academic-cap'),
             ])->icon('server'),
 

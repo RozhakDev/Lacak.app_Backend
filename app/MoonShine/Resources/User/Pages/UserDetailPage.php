@@ -14,18 +14,13 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Email;
 use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use App\MoonShine\Resources\Role\RoleResource;
+use App\MoonShine\Resources\School\SchoolResource;
 use Throwable;
 
-
-/**
- * @extends DetailPage<UserResource>
- */
 class UserDetailPage extends DetailPage
 {
-    /**
-     * @return list<FieldContract>
-     */
     protected function fields(): iterable
     {
         return [
@@ -33,6 +28,7 @@ class UserDetailPage extends DetailPage
             Text::make('Nama Lengkap', 'name'),
             Email::make('Email', 'email'),
             Text::make('NISN', 'nisn'),
+            BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class),
             BelongsToMany::make('Hak Akses', 'roles', 'name', RoleResource::class)
                 ->badge('purple'),
         ];
@@ -43,20 +39,11 @@ class UserDetailPage extends DetailPage
         return parent::buttons();
     }
 
-    /**
-     * @param  TableBuilder  $component
-     *
-     * @return TableBuilder
-     */
     protected function modifyDetailComponent(ComponentContract $component): ComponentContract
     {
         return $component;
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function topLayer(): array
     {
         return [
@@ -64,10 +51,6 @@ class UserDetailPage extends DetailPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function mainLayer(): array
     {
         return [
@@ -75,10 +58,6 @@ class UserDetailPage extends DetailPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function bottomLayer(): array
     {
         return [

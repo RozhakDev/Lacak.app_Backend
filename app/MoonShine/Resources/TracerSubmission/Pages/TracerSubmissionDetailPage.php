@@ -13,10 +13,6 @@ use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use Throwable;
 
-
-/**
- * @extends DetailPage<TracerSubmissionResource>
- */
 class TracerSubmissionDetailPage extends DetailPage
 {
 
@@ -31,20 +27,11 @@ class TracerSubmissionDetailPage extends DetailPage
         return \MoonShine\UI\Components\ActionButton::emptyHidden();
     }
 
-    /**
-     * @param  TableBuilder  $component
-     *
-     * @return TableBuilder
-     */
     protected function modifyDetailComponent(ComponentContract $component): ComponentContract
     {
         return $component;
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function topLayer(): array
     {
         return [
@@ -52,10 +39,6 @@ class TracerSubmissionDetailPage extends DetailPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function mainLayer(): array
     {
         return [
@@ -63,10 +46,6 @@ class TracerSubmissionDetailPage extends DetailPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function bottomLayer(): array
     {
         return [

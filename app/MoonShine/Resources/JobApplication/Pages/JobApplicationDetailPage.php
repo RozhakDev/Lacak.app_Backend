@@ -17,15 +17,8 @@ use App\MoonShine\Resources\JobApplication\JobApplicationResource;
 use MoonShine\Support\ListOf;
 use Throwable;
 
-
-/**
- * @extends DetailPage<JobApplicationResource>
- */
 class JobApplicationDetailPage extends DetailPage
 {
-    /**
-     * @return list<FieldContract>
-     */
     protected function fields(): iterable
     {
         return [
@@ -69,20 +62,11 @@ class JobApplicationDetailPage extends DetailPage
         return parent::buttons();
     }
 
-    /**
-     * @param  TableBuilder  $component
-     *
-     * @return TableBuilder
-     */
     protected function modifyDetailComponent(ComponentContract $component): ComponentContract
     {
         return $component;
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function topLayer(): array
     {
         return [
@@ -90,10 +74,6 @@ class JobApplicationDetailPage extends DetailPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function mainLayer(): array
     {
         return [
@@ -101,10 +81,6 @@ class JobApplicationDetailPage extends DetailPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function bottomLayer(): array
     {
         return [

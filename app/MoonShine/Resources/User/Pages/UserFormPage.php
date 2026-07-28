@@ -17,19 +17,14 @@ use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Email;
 use MoonShine\UI\Fields\Password;
 use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use App\MoonShine\Resources\Role\RoleResource;
+use App\MoonShine\Resources\School\SchoolResource;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
 
-
-/**
- * @extends FormPage<UserResource>
- */
 class UserFormPage extends FormPage
 {
-    /**
-     * @return list<ComponentContract|FieldContract>
-     */
     protected function fields(): iterable
     {
         return [
@@ -46,6 +41,9 @@ class UserFormPage extends FormPage
                     ->canSee(fn(\MoonShine\UI\Fields\Password $field) => !request()->route('resourceItem')),
                 BelongsToMany::make('Hak Akses', 'roles', 'name', RoleResource::class)
                     ->selectMode(),
+                BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class)
+                    ->nullable()
+                    ->hint('Kosongkan untuk Super Admin (Bisa akses semua sekolah)'),
             ]),
         ];
     }
@@ -69,20 +67,11 @@ class UserFormPage extends FormPage
         ];
     }
 
-    /**
-     * @param  FormBuilder  $component
-     *
-     * @return FormBuilder
-     */
     protected function modifyFormComponent(FormBuilderContract $component): FormBuilderContract
     {
         return $component;
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function topLayer(): array
     {
         return [
@@ -90,10 +79,6 @@ class UserFormPage extends FormPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function mainLayer(): array
     {
         return [
@@ -101,10 +86,6 @@ class UserFormPage extends FormPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function bottomLayer(): array
     {
         return [

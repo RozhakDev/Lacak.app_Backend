@@ -14,15 +14,8 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use Throwable;
 
-
-/**
- * @extends DetailPage<RoleResource>
- */
 class RoleDetailPage extends DetailPage
 {
-    /**
-     * @return list<FieldContract>
-     */
     protected function fields(): iterable
     {
         return [
@@ -36,20 +29,11 @@ class RoleDetailPage extends DetailPage
         return parent::buttons();
     }
 
-    /**
-     * @param  TableBuilder  $component
-     *
-     * @return TableBuilder
-     */
     protected function modifyDetailComponent(ComponentContract $component): ComponentContract
     {
         return $component;
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function topLayer(): array
     {
         return [
@@ -57,10 +41,6 @@ class RoleDetailPage extends DetailPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function mainLayer(): array
     {
         return [
@@ -68,10 +48,6 @@ class RoleDetailPage extends DetailPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function bottomLayer(): array
     {
         return [

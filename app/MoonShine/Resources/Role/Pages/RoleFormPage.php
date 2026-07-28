@@ -17,15 +17,8 @@ use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
 
-
-/**
- * @extends FormPage<RoleResource>
- */
 class RoleFormPage extends FormPage
 {
-    /**
-     * @return list<ComponentContract|FieldContract>
-     */
     protected function fields(): iterable
     {
         return [
@@ -53,20 +46,11 @@ class RoleFormPage extends FormPage
         ];
     }
 
-    /**
-     * @param  FormBuilder  $component
-     *
-     * @return FormBuilder
-     */
     protected function modifyFormComponent(FormBuilderContract $component): FormBuilderContract
     {
         return $component;
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function topLayer(): array
     {
         return [
@@ -74,10 +58,6 @@ class RoleFormPage extends FormPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function mainLayer(): array
     {
         return [
@@ -85,10 +65,6 @@ class RoleFormPage extends FormPage
         ];
     }
 
-    /**
-     * @return list<ComponentContract>
-     * @throws Throwable
-     */
     protected function bottomLayer(): array
     {
         return [
