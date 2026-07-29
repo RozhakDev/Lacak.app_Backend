@@ -23,11 +23,19 @@ class TracerService
             'portfolio_url' => $data['portfolio_url'] ?? null,
         ];
 
+        $existingProfile = AlumniProfile::where('user_id', $user->id)->first();
+
         if (isset($data['avatar']) && $data['avatar'] instanceof \Illuminate\Http\UploadedFile) {
+            if ($existingProfile && $existingProfile->avatar_url) {
+                Storage::disk('public')->delete($existingProfile->avatar_url);
+            }
             $profileData['avatar_url'] = $data['avatar']->store('alumni_avatars', 'public');
         }
 
         if (isset($data['resume']) && $data['resume'] instanceof \Illuminate\Http\UploadedFile) {
+            if ($existingProfile && $existingProfile->resume_url) {
+                Storage::disk('public')->delete($existingProfile->resume_url);
+            }
             $profileData['resume_url'] = $data['resume']->store('alumni_resumes', 'public');
         }
 

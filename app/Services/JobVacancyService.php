@@ -85,7 +85,7 @@ class JobVacancyService
 
     public function getMyApplications(int $userId, int $perPage = 10): LengthAwarePaginator
     {
-        return JobApplication::with('jobVacancy')
+        return JobApplication::with('jobVacancy.creator')
             ->where('user_id', $userId)
             ->latest()
             ->paginate($perPage);

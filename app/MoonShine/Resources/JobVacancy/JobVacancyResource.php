@@ -51,7 +51,10 @@ class JobVacancyResource extends ModelResource
             Text::make('Judul Lowongan', 'title')->required(),
             Text::make('Nama Perusahaan', 'company_name')->required(),
             Date::make('Batas Waktu', 'expires_at')->nullable(),
-            Switcher::make('Status Aktif', 'is_active')->default(true),
+            Switcher::make('Status Aktif', 'is_active')
+                ->readonly(fn($item) => !auth()->user()->can('update', $item))
+                ->updateOnPreview()
+                ->default(true),
         ];
     }
 
