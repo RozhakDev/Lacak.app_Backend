@@ -12,14 +12,13 @@ use App\MoonShine\Resources\Event\Pages\EventDetailPage;
 
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
+use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 
 class EventResource extends ModelResource
 {
     protected string $model = Event::class;
-
     protected string $title = 'Kegiatan';
-    
-    protected bool $withPolicy = false;
+    protected bool $withPolicy = true;
 
     public function rules(Model $item): array
     {
@@ -40,5 +39,16 @@ class EventResource extends ModelResource
             EventFormPage::class,
             EventDetailPage::class,
         ];
+    }
+
+    protected function beforeCreating(DataWrapperContract $item): DataWrapperContract
+    {
+        $model = $item->getOriginal();
+        
+        if (!auth()->user()->hasRole('Super Admin')) {
+            $model->school_id = auth()->user()->school_id;
+        }
+
+        return $item;
     }
 }

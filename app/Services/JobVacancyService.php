@@ -21,7 +21,6 @@ class JobVacancyService
             });
 
         if (auth()->check()) {
-            $query->where('school_id', auth()->user()->school_id);
             $query->withExists(['jobApplications as is_applied' => function ($q) {
                 $q->where('user_id', auth()->id());
             }]);
@@ -47,7 +46,6 @@ class JobVacancyService
             });
 
         if (auth()->check()) {
-            $jobQuery->where('school_id', auth()->user()->school_id);
             $jobQuery->withExists(['jobApplications as is_applied' => function ($q) {
                 $q->where('user_id', auth()->id());
             }]);

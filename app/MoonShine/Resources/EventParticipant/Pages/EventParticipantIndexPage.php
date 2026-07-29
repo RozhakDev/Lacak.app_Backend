@@ -20,6 +20,8 @@ class EventParticipantIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
+            Text::make('Sumber', 'source', fn($item) => $item->event?->school_id === null || ($item->event?->creator && $item->event->creator->hasRole('Super Admin')) ? 'Pusat' : 'Lokal')
+                ->badge(fn($status) => $status === 'Pusat' ? 'info' : 'gray'),
             Text::make('Sekolah', 'school_name', fn($item) => $item->event?->school?->name ?? '-')
                 ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
             BelongsTo::make('Event', 'event', 'title', EventResource::class)->sortable(),
@@ -28,7 +30,8 @@ class EventParticipantIndexPage extends IndexPage
                 'registered' => 'Terdaftar',
                 'attended' => 'Hadir',
                 'cancelled' => 'Dibatalkan'
-            ])->updateOnPreview(),
+            ])->readonly(fn($item) => !auth()->user()->can('update', $item))
+              ->updateOnPreview(),
         ];
     }
 }

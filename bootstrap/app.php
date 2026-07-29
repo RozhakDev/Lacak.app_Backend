@@ -17,8 +17,26 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*'),
+            fn (Request $request) => $request->is('api/*') || $request->ajax() || $request->wantsJson() || $request->is('*update-column*'),
         );
+
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $e, Request $request) {
+            if ($request->ajax() || $request->wantsJson() || $request->is('*update-column*')) {
+                return response()->json([
+                    'message' => 'Akses ditolak: Anda tidak berhak memodifikasi data milik pusat/sekolah lain.',
+                    'messageType' => 'error'
+                ], 403);
+            }
+        });
+
+        $exceptions->render(function (\Illuminate\Auth\Access\AuthorizationException $e, Request $request) {
+            if ($request->ajax() || $request->wantsJson() || $request->is('*update-column*')) {
+                return response()->json([
+                    'message' => 'Akses ditolak: Anda tidak berhak memodifikasi data milik pusat/sekolah lain.',
+                    'messageType' => 'error'
+                ], 403);
+            }
+        });
 
         $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, Request $request) {
             if ($request->is('api/*') || $request->expectsJson()) {

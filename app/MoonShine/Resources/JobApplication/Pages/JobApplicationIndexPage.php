@@ -29,6 +29,8 @@ class JobApplicationIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
+            Text::make('Sumber', 'source', fn($item) => $item->jobVacancy?->school_id === null || ($item->jobVacancy?->creator && $item->jobVacancy->creator->hasRole('Super Admin')) ? 'Pusat' : 'Lokal')
+                ->badge(fn($status) => $status === 'Pusat' ? 'info' : 'gray'),
             Text::make('Sekolah', 'school_name', fn($item) => $item->jobVacancy?->school?->name ?? '-')
                 ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
             BelongsTo::make('Lowongan', 'jobVacancy', 'title', JobVacancyResource::class)->sortable(),
@@ -39,7 +41,8 @@ class JobApplicationIndexPage extends IndexPage
                 'reviewed' => 'Sedang Direview',
                 'accepted' => 'Diterima',
                 'rejected' => 'Ditolak'
-            ])->updateOnPreview(),
+            ])->readonly(fn($item) => !auth()->user()->can('update', $item))
+              ->updateOnPreview(),
         ];
     }
 

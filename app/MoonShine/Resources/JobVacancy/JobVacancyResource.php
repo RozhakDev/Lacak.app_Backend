@@ -27,6 +27,7 @@ class JobVacancyResource extends ModelResource
 {
     protected string $model = JobVacancy::class;
     protected string $title = 'Lowongan Kerja';
+    protected bool $withPolicy = true;
 
     protected function search(): array
     {
@@ -41,6 +42,8 @@ class JobVacancyResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
+            Text::make('Sumber', 'source', fn($item) => $item->school_id === null || ($item->creator && $item->creator->hasRole('Super Admin')) ? 'Pusat' : 'Lokal')
+                ->badge(fn($status) => $status === 'Pusat' ? 'info' : 'gray'),
             BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class)
                 ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
             BelongsTo::make('Dibuat Oleh', 'creator', 'name', UserResource::class),
@@ -86,6 +89,11 @@ class JobVacancyResource extends ModelResource
     {
         $model = $item->getOriginal();
         $model->created_by = auth()->id();
+        
+        if (!auth()->user()->hasRole('Super Admin')) {
+            $model->school_id = auth()->user()->school_id;
+        }
+
         return $item;
     }
 

@@ -22,6 +22,8 @@ class EventIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
+            Text::make('Sumber', 'source', fn($item) => $item->school_id === null || ($item->creator && $item->creator->hasRole('Super Admin')) ? 'Pusat' : 'Lokal')
+                ->badge(fn($status) => $status === 'Pusat' ? 'info' : 'gray'),
             BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class)
                 ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
             Image::make('Banner', 'banner_url')->disk('public')->dir('events'),
@@ -39,7 +41,9 @@ class EventIndexPage extends IndexPage
                 'hybrid' => 'Hybrid',
             ])->sortable(),
             Date::make('Mulai', 'start_date')->format('Y-m-d H:i')->sortable(),
-            Switcher::make('Aktif', 'is_active')->updateOnPreview(),
+            Switcher::make('Aktif', 'is_active')
+                ->readonly(fn($item) => !auth()->user()->can('update', $item))
+                ->updateOnPreview(),
         ];
     }
 }

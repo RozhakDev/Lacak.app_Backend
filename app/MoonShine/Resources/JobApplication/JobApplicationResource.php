@@ -28,6 +28,7 @@ class JobApplicationResource extends ModelResource
 {
     protected string $model = JobApplication::class;
     protected string $title = 'Lamaran Kerja';
+    protected bool $withPolicy = true;
 
     protected function activeActions(): ListOf
     {

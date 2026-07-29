@@ -14,7 +14,10 @@ class SchoolScope implements Scope
         if (Auth::hasUser()) {
             $user = Auth::user();
             if (!$user->hasRole('Super Admin')) {
-                $builder->where($model->getTable() . '.school_id', $user->school_id);
+                $builder->where(function ($query) use ($model, $user) {
+                    $query->where($model->getTable() . '.school_id', $user->school_id)
+                          ->orWhereNull($model->getTable() . '.school_id');
+                });
             }
         }
     }

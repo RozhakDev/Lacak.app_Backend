@@ -19,7 +19,7 @@ class EventParticipantResource extends ModelResource
 {
     protected string $model = EventParticipant::class;
     protected string $title = 'Peserta Kegiatan';
-    protected bool $withPolicy = false;
+    protected bool $withPolicy = true;
 
     protected function activeActions(): ListOf
     {

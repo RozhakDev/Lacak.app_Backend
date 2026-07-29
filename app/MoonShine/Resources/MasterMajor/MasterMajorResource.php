@@ -16,12 +16,14 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use App\MoonShine\Resources\School\SchoolResource;
+use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 
 class MasterMajorResource extends ModelResource
 {
     protected string $model = MasterMajor::class;
     protected string $title = 'Master Jurusan';
     public string $column = 'name';
+    protected bool $withPolicy = true;
 
     protected function search(): array
     {
@@ -66,5 +68,16 @@ class MasterMajorResource extends ModelResource
             'code' => ['required', 'string', 'unique:master_majors,code,' . $item->getKey()],
             'name' => ['required', 'string'],
         ];
+    }
+
+    protected function beforeCreating(DataWrapperContract $item): DataWrapperContract
+    {
+        $model = $item->getOriginal();
+        
+        if (!auth()->user()->hasRole('Super Admin')) {
+            $model->school_id = auth()->user()->school_id;
+        }
+
+        return $item;
     }
 }
