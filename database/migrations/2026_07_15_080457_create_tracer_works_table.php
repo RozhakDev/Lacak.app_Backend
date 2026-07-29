@@ -21,9 +21,8 @@ return new class extends Migration
             $table->string('company_name');
             $table->string('position');
             $table->date('start_date');
-            $table->boolean('is_linear');
+            $table->boolean('is_linear')->default(false);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

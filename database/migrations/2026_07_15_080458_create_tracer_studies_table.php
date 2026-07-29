@@ -16,9 +16,8 @@ return new class extends Migration
             $table->foreignId('tracer_submission_id')->constrained('tracer_submissions')->cascadeOnDelete();
             $table->string('university_name');
             $table->date('enrollment_date');
-            $table->boolean('is_linear');
+            $table->boolean('is_linear')->default(false);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

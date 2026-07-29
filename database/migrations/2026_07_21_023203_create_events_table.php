@@ -25,7 +25,6 @@ return new class extends Migration
             $table->string('banner_url')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            $table->softDeletes();
 
             $table->index(['is_active', 'end_date']);
         });

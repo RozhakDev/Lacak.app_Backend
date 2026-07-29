@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasSchoolScope;
 
 class Event extends Model
 {
-    use HasFactory, SoftDeletes, HasSchoolScope;
+    use HasFactory, HasSchoolScope;
 
     protected static function booted()
     {

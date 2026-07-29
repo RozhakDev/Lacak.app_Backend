@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasRelatedSchoolScope;
 
 class TracerWork extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasRelatedSchoolScope;
 
     protected $fillable = [
         'tracer_submission_id',
@@ -32,6 +32,11 @@ class TracerWork extends Model
 
     public function tracerSubmission()
     {
-        return $this->belongsTo(tracerSubmission::class);
+        return $this->belongsTo(TracerSubmission::class);
+    }
+
+    public function getSchoolRelationPath()
+    {
+        return 'tracerSubmission.alumniProfile.user';
     }
 }

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->enum('status', ['bekerja', 'kuliah', 'wirausaha']);
             $table->timestamp('submitted_at')->useCurrent();
             $table->timestamps();
-            $table->softDeletes();
 
             $table->index('created_at');
             $table->index('status');

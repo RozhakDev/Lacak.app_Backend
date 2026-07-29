@@ -19,7 +19,6 @@ return new class extends Migration
             $table->text('cover_letter')->nullable();
             $table->enum('status', ['pending', 'reviewed', 'accepted', 'rejected'])->default('pending');
             $table->timestamps();
-            $table->softDeletes();
             
             $table->unique(['job_vacancy_id', 'user_id']);
             $table->index('created_at');

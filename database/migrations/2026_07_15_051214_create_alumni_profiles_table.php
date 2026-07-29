@@ -18,7 +18,6 @@ return new class extends Migration
             $table->year('graduation_year');
             $table->string('phone_number')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

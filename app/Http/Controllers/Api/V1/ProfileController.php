@@ -20,7 +20,7 @@ class ProfileController extends Controller
 
     public function show(Request $request): JsonResponse
     {
-        $profile = $request->user()->alumniProfile()->with('experiences')->first();
+        $profile = $request->user()->alumniProfile()->with(['experiences', 'user', 'major'])->first();
         
         if (!$profile) {
             return $this->errorResponse('Profil tidak ditemukan atau belum lengkap.', [], 404);
@@ -32,7 +32,7 @@ class ProfileController extends Controller
     public function update(UpdateProfileRequest $request): JsonResponse
     {
         $profile = $this->tracerService->updateProfile($request->user(), $request->validated());
-        $profile->load('experiences');
+        $profile->load(['experiences', 'user', 'major']);
         
         return $this->successResponse('Profil berhasil diperbarui.', new ProfileResource($profile));
     }

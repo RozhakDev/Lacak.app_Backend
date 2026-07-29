@@ -19,7 +19,6 @@ return new class extends Migration
             $table->enum('monthly_omset_range', ['<_5_juta', '5_-_15_juta', '>_15_juta']);
             $table->string('business_type');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

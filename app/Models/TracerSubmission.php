@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasRelatedSchoolScope;
 
 class TracerSubmission extends Model
 {
-    use HasFactory, SoftDeletes, HasRelatedSchoolScope;
+    use HasFactory, HasRelatedSchoolScope;
 
     protected $fillable = [
         'alumni_profile_id',
