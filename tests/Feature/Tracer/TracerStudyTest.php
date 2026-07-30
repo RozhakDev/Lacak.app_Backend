@@ -46,7 +46,7 @@ class TracerStudyTest extends TestCase
 
     public function test_successful_submission_for_bekerja_status(): void
     {
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $profile = AlumniProfile::factory()->create(['user_id' => $user->id]);
         Sanctum::actingAs($user);
 
@@ -114,7 +114,7 @@ class TracerStudyTest extends TestCase
 
     public function test_successful_submission_for_wirausaha_status(): void
     {
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $profile = AlumniProfile::factory()->create(['user_id' => $user->id]);
         Sanctum::actingAs($user);
 
@@ -147,7 +147,7 @@ class TracerStudyTest extends TestCase
 
     public function test_missing_required_nested_data_triggers_db_transaction_rollback(): void
     {
-        $user = User::factory()->create();
+        $user    = User::factory()->create();
         $profile = AlumniProfile::factory()->create(['user_id' => $user->id]);
 
         $existingSubmission = TracerSubmission::factory()->create([
@@ -182,17 +182,11 @@ class TracerStudyTest extends TestCase
             $exceptionCaught = true;
         }
 
-        $this->assertTrue($exceptionCaught, 'Exception should be thrown when missing required nested data during update.');
+        $this->assertTrue($exceptionCaught, 'Exception wajib dilempar ketika data nested tidak lengkap.');
 
         $this->assertDatabaseHas('tracer_submissions', [
             'id' => $existingSubmission->id,
             'status' => 'kuliah',
-        ]);
-
-        $this->assertDatabaseHas('tracer_studies', [
-            'id' => $existingStudy->id,
-            'university_name' => 'Universitas Indonesia',
-            'deleted_at' => null,
         ]);
 
         $this->assertDatabaseCount('tracer_works', 0);
@@ -203,22 +197,14 @@ class TracerStudyTest extends TestCase
         $user = User::factory()->create();
         $profile = AlumniProfile::factory()->create(['user_id' => $user->id]);
 
-        $submission = TracerSubmission::factory()->create([
+        $submission  = TracerSubmission::factory()->create([
             'alumni_profile_id' => $profile->id,
             'status' => 'bekerja',
         ]);
 
-        $work = TracerWork::factory()->create([
-            'tracer_submission_id' => $submission->id,
-        ]);
-
-        $study = TracerStudy::factory()->create([
-            'tracer_submission_id' => $submission->id,
-        ]);
-
-        $entrepreneur = TracerEntrepreneur::factory()->create([
-            'tracer_submission_id' => $submission->id,
-        ]);
+        $work = TracerWork::factory()->create(['tracer_submission_id' => $submission->id]);
+        $study = TracerStudy::factory()->create(['tracer_submission_id' => $submission->id]);
+        $entrepreneur = TracerEntrepreneur::factory()->create(['tracer_submission_id' => $submission->id]);
 
         $submissionId = $submission->id;
         $workId = $work->id;

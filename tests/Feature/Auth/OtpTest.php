@@ -19,31 +19,25 @@ class OtpTest extends TestCase
         Mail::fake();
     }
 
-    public function test_generating_new_otp_marks_previous_unused_otps_as_used(): void
+    public function test_generating_new_otp_deletes_all_previous_otps(): void
     {
         $user = User::factory()->unverified()->create([
             'email' => 'otpuser@example.com',
         ]);
 
-        $oldOtp = OtpCode::factory()->create([
-            'user_id' => $user->id,
-            'code' => '111111',
-            'is_used' => false,
-            'expires_at' => now()->addMinutes(5),
-        ]);
+        $oldOtp1 = OtpCode::factory()->create(['user_id' => $user->id, 'code' => '111111']);
+        $oldOtp2 = OtpCode::factory()->create(['user_id' => $user->id, 'code' => '222222']);
 
         $authService = app(AuthService::class);
         $authService->generateOtp($user->email, 'verify');
 
-        $this->assertDatabaseHas('otp_codes', [
-            'id' => $oldOtp->id,
-            'is_used' => true,
-        ]);
+        $this->assertDatabaseMissing('otp_codes', ['id' => $oldOtp1->id]);
+        $this->assertDatabaseMissing('otp_codes', ['id' => $oldOtp2->id]);
 
-        $this->assertDatabaseCount('otp_codes', 2);
+        $this->assertDatabaseCount('otp_codes', 1);
     }
 
-    public function test_valid_otp_verification_succeeds_and_marks_otp_as_used(): void
+    public function test_valid_otp_verification_succeeds_and_deletes_otp(): void
     {
         $user = User::factory()->unverified()->create([
             'email' => 'verify@example.com',
@@ -52,7 +46,6 @@ class OtpTest extends TestCase
         $otp = OtpCode::factory()->create([
             'user_id' => $user->id,
             'code' => '654321',
-            'is_used' => false,
             'expires_at' => now()->addMinutes(5),
         ]);
 
@@ -67,23 +60,15 @@ class OtpTest extends TestCase
                 'message' => 'Verifikasi berhasil. Akun Anda kini aktif.',
             ]);
 
-        $this->assertDatabaseHas('otp_codes', [
-            'id' => $otp->id,
-            'is_used' => true,
-        ]);
+        $this->assertDatabaseMissing('otp_codes', ['id' => $otp->id]);
 
         $this->assertNotNull($user->fresh()->email_verified_at);
     }
 
-    public function test_reusing_valid_otp_returns_400(): void
+    public function test_reusing_consumed_otp_returns_400(): void
     {
         $user = User::factory()->unverified()->create([
             'email' => 'reuse@example.com',
-        ]);
-
-        $otp = OtpCode::factory()->used()->create([
-            'user_id' => $user->id,
-            'code' => '123456',
         ]);
 
         $response = $this->postJson('/api/v1/auth/verify-email', [
@@ -104,10 +89,9 @@ class OtpTest extends TestCase
             'email' => 'expired@example.com',
         ]);
 
-        $otp = OtpCode::factory()->expired()->create([
+        OtpCode::factory()->expired()->create([
             'user_id' => $user->id,
             'code' => '999999',
-            'is_used' => false,
         ]);
 
         $response = $this->postJson('/api/v1/auth/verify-email', [

@@ -5,12 +5,12 @@ namespace Tests\Feature;
 use App\Models\AlumniExperience;
 use App\Models\AlumniProfile;
 use App\Models\JobVacancy;
+use App\Models\School;
 use App\Models\TracerSubmission;
 use App\Models\TracerWork;
 use App\Models\TracerStudy;
 use App\Models\TracerEntrepreneur;
 use App\Models\User;
-use App\Services\TracerService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
@@ -40,44 +40,39 @@ class M2EmpiricalVerificationTest extends TestCase
                 'identifier' => 'rate_test@example.com',
                 'password' => 'wrong-pass',
             ]);
-            $this->assertEquals(401, $res->status(), "Request {$i} should be 401");
+            $this->assertEquals(401, $res->status(), "Request ke-{$i} seharusnya 401");
         }
 
         $res6 = $this->postJson('/api/v1/auth/login', [
             'identifier' => 'rate_test@example.com',
             'password' => 'wrong-pass',
         ]);
-        $this->assertEquals(429, $res6->status(), "6th request should trigger 429");
+        $this->assertEquals(429, $res6->status(), 'Request ke-6 wajib memicu HTTP 429 (Too Many Requests)');
 
         $res7 = $this->postJson('/api/v1/auth/login', [
             'identifier' => 'rate_test@example.com',
             'password' => 'wrong-pass',
         ]);
-        $this->assertEquals(429, $res7->status(), "7th request should trigger 429");
+        $this->assertEquals(429, $res7->status(), 'Request ke-7 wajib tetap 429');
 
         $resOther = $this->getJson('/api/v1/master/majors');
-        $this->assertEquals(200, $resOther->status(), "Other v1 route should return 200, not 429");
+        $this->assertEquals(200, $resOther->status(), 'Rute master data wajib tetap 200, tidak terpengaruh rate limit login');
     }
 
-    public function test_assert_database_missing_proves_hard_delete(): void
+    public function test_hard_delete_removes_row_permanently(): void
     {
         $user = User::factory()->create();
         $profile = AlumniProfile::factory()->create(['user_id' => $user->id]);
-
         $submission = TracerSubmission::factory()->create(['alumni_profile_id' => $profile->id]);
         $work = TracerWork::factory()->create(['tracer_submission_id' => $submission->id]);
-
         $workId = $work->id;
+
+        $this->assertDatabaseHas('tracer_works', ['id' => $workId]);
 
         $work->delete();
 
         $rawCount = DB::table('tracer_works')->where('id', $workId)->count();
-        $this->assertEquals(1, $rawCount, "Soft-deleted row still exists in raw DB table");
-
-        $work->forceDelete();
-
-        $rawCountAfterForce = DB::table('tracer_works')->where('id', $workId)->count();
-        $this->assertEquals(0, $rawCountAfterForce, "Force-deleted row is completely missing from raw DB table");
+        $this->assertEquals(0, $rawCount, 'Record wajib langsung hilang dari DB setelah delete() (hard delete)');
 
         $this->assertDatabaseMissing('tracer_works', ['id' => $workId]);
     }
@@ -86,14 +81,20 @@ class M2EmpiricalVerificationTest extends TestCase
     {
         Storage::fake('public');
 
-        $user = User::factory()->create();
+        $school = School::factory()->create();
+        $user = User::factory()->create(['school_id' => $school->id]);
         $job = JobVacancy::factory()->create([
+            'school_id' => $school->id,
             'is_active' => true,
             'expires_at' => now()->addDays(10),
         ]);
         Sanctum::actingAs($user);
 
-        $file = UploadedFile::fake()->create('cv.docx', 400, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        $file = UploadedFile::fake()->create(
+            'cv.docx',
+            400,
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        );
 
         $response = $this->postJson("/api/v1/jobs/{$job->id}/apply", [
             'cv' => $file,
@@ -116,8 +117,10 @@ class M2EmpiricalVerificationTest extends TestCase
     {
         Storage::fake('public');
 
-        $user1 = User::factory()->create();
+        $school1 = School::factory()->create();
+        $user1 = User::factory()->create(['school_id' => $school1->id]);
         $job1 = JobVacancy::factory()->create([
+            'school_id' => $school1->id,
             'is_active' => true,
             'expires_at' => now()->addDays(10),
         ]);
@@ -127,12 +130,12 @@ class M2EmpiricalVerificationTest extends TestCase
         $responseValid = $this->postJson("/api/v1/jobs/{$job1->id}/apply", [
             'cv' => $validSizeFile,
         ]);
+        $responseValid->assertStatus(201)->assertJson(['success' => true]);
 
-        $responseValid->assertStatus(201)
-            ->assertJson(['success' => true]);
-
-        $user2 = User::factory()->create();
+        $school2 = School::factory()->create();
+        $user2 = User::factory()->create(['school_id' => $school2->id]);
         $job2 = JobVacancy::factory()->create([
+            'school_id' => $school2->id,
             'is_active' => true,
             'expires_at' => now()->addDays(10),
         ]);
@@ -142,9 +145,7 @@ class M2EmpiricalVerificationTest extends TestCase
         $responseExceeded = $this->postJson("/api/v1/jobs/{$job2->id}/apply", [
             'cv' => $oversizedFile,
         ]);
-
-        $responseExceeded->assertStatus(422)
-            ->assertJsonValidationErrors(['cv']);
+        $responseExceeded->assertStatus(422)->assertJsonValidationErrors(['cv']);
     }
 
     public function test_alumni_experience_same_day_date_range_validation(): void
