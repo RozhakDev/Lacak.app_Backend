@@ -16,7 +16,6 @@ class OtpCodeFactory extends Factory
             'user_id' => User::factory(),
             'code' => str_pad((string) fake()->numberBetween(0, 999999), 6, '0', STR_PAD_LEFT),
             'expires_at' => now()->addMinutes(5),
-            'is_used' => false,
         ];
     }
 
@@ -24,13 +23,6 @@ class OtpCodeFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'expires_at' => now()->subMinutes(10),
-        ]);
-    }
-
-    public function used(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'is_used' => true,
         ]);
     }
 }

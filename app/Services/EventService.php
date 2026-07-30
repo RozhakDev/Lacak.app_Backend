@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Event;
 use App\Models\EventParticipant;
+use App\Models\AlumniProfile;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
@@ -53,6 +54,11 @@ class EventService
 
     public function registerEvent(int $eventId, int $userId): EventParticipant
     {
+        $hasProfile = AlumniProfile::where('user_id', $userId)->exists();
+        if (!$hasProfile) {
+            throw new Exception('Silakan lengkapi profil alumni Anda terlebih dahulu sebelum mendaftar kegiatan.');
+        }
+
         $event = $this->getEventDetail($eventId);
 
         $existing = EventParticipant::where('event_id', $eventId)
@@ -73,6 +79,9 @@ class EventService
     public function getMyEvents(int $userId, int $perPage = 10): LengthAwarePaginator
     {
         return EventParticipant::with('event.creator')
+            ->whereHas('event', function ($query) {
+                $query->where('is_active', true);
+            })
             ->where('user_id', $userId)
             ->latest()
             ->paginate($perPage);

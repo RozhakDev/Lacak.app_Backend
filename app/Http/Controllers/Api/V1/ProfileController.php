@@ -31,9 +31,14 @@ class ProfileController extends Controller
 
     public function update(UpdateProfileRequest $request): JsonResponse
     {
+        $isNew = !$request->user()->alumniProfile()->exists();
+        
         $profile = $this->tracerService->updateProfile($request->user(), $request->validated());
         $profile->load(['experiences', 'user', 'major']);
         
-        return $this->successResponse('Profil berhasil diperbarui.', new ProfileResource($profile));
+        $statusCode = $isNew ? 201 : 200;
+        $message = $isNew ? 'Profil berhasil dibuat.' : 'Profil berhasil diperbarui.';
+        
+        return $this->successResponse($message, new ProfileResource($profile), $statusCode);
     }
 }

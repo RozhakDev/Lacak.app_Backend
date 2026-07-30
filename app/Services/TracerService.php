@@ -25,24 +25,37 @@ class TracerService
 
         $existingProfile = AlumniProfile::where('user_id', $user->id)->first();
 
-        if (isset($data['avatar']) && $data['avatar'] instanceof \Illuminate\Http\UploadedFile) {
-            if ($existingProfile && $existingProfile->avatar_url) {
-                Storage::disk('public')->delete($existingProfile->avatar_url);
-            }
-            $profileData['avatar_url'] = $data['avatar']->store('alumni_avatars', 'public');
-        }
+        return DB::transaction(function () use ($user, $data, $profileData, $existingProfile) {
+            $uploadedFiles = [];
+            
+            try {
+                if (isset($data['avatar']) && $data['avatar'] instanceof \Illuminate\Http\UploadedFile) {
+                    if ($existingProfile && $existingProfile->avatar_url) {
+                        Storage::disk('public')->delete($existingProfile->avatar_url);
+                    }
+                    $profileData['avatar_url'] = $data['avatar']->store('alumni_avatars', 'public');
+                    $uploadedFiles[] = $profileData['avatar_url'];
+                }
 
-        if (isset($data['resume']) && $data['resume'] instanceof \Illuminate\Http\UploadedFile) {
-            if ($existingProfile && $existingProfile->resume_url) {
-                Storage::disk('public')->delete($existingProfile->resume_url);
-            }
-            $profileData['resume_url'] = $data['resume']->store('alumni_resumes', 'public');
-        }
+                if (isset($data['resume']) && $data['resume'] instanceof \Illuminate\Http\UploadedFile) {
+                    if ($existingProfile && $existingProfile->resume_url) {
+                        Storage::disk('public')->delete($existingProfile->resume_url);
+                    }
+                    $profileData['resume_url'] = $data['resume']->store('alumni_resumes', 'public');
+                    $uploadedFiles[] = $profileData['resume_url'];
+                }
 
-        return AlumniProfile::updateOrCreate(
-            ['user_id' => $user->id],
-            $profileData
-        );
+                return AlumniProfile::updateOrCreate(
+                    ['user_id' => $user->id],
+                    $profileData
+                );
+            } catch (\Exception $e) {
+                foreach ($uploadedFiles as $file) {
+                    Storage::disk('public')->delete($file);
+                }
+                throw $e;
+            }
+        });
     }
 
     public function submitTracer(User $user, array $data): TracerSubmission
@@ -53,12 +66,11 @@ class TracerService
         }
 
         return DB::transaction(function () use ($profile, $data) {
-            $submission = TracerSubmission::withTrashed()->updateOrCreate(
+            $submission = TracerSubmission::updateOrCreate(
                 ['alumni_profile_id' => $profile->id],
                 [
                     'status' => $data['status'],
                     'submitted_at' => now(),
-                    'deleted_at' => null,
                 ]
             );
 
@@ -100,5 +112,23 @@ class TracerService
 
             return $submission->load(['work', 'study', 'entrepreneur']);
         });
+    }
+
+    public function getSubmission(User $user): TracerSubmission
+    {
+        $profile = AlumniProfile::where('user_id', $user->id)->first();
+        if (!$profile) {
+            throw new Exception('Profil Anda belum lengkap. Silakan lengkapi profil terlebih dahulu.', 403);
+        }
+
+        $submission = TracerSubmission::with(['work', 'study', 'entrepreneur'])
+            ->where('alumni_profile_id', $profile->id)
+            ->first();
+
+        if (!$submission) {
+            throw new Exception('Data tracer study belum diisi.', 404);
+        }
+
+        return $submission;
     }
 }

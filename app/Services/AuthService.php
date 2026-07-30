@@ -67,13 +67,15 @@ class AuthService
     {
         $user = User::where('email', $email)->first();
 
+        if (!$user) {
+            throw new Exception('Pengguna dengan email tersebut tidak ditemukan.', 404);
+        }
+
         if ($context === 'verify' && !is_null($user->email_verified_at)) {
             throw new Exception('Akun ini sudah diverifikasi.', 400);
         }
 
-        OtpCode::where('user_id', $user->id)
-            ->where('is_used', false)
-            ->update(['is_used' => true]);
+        OtpCode::where('user_id', $user->id)->delete();
 
         $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
         
@@ -101,9 +103,12 @@ class AuthService
     {
         $user = User::where('email', $email)->first();
 
+        if (!$user) {
+            throw new Exception('Pengguna dengan email tersebut tidak ditemukan.', 404);
+        }
+
         $validOtp = OtpCode::where('user_id', $user->id)
             ->where('code', $otpCode)
-            ->where('is_used', false)
             ->where('expires_at', '>=', now())
             ->first();
 
@@ -112,7 +117,7 @@ class AuthService
         }
 
         return DB::transaction(function () use ($validOtp, $user) {
-            $validOtp->update(['is_used' => true]);
+            $validOtp->delete();
             $user->update(['email_verified_at' => now()]);
             
             $token = $user->createToken('auth_token')->plainTextToken;
@@ -128,9 +133,12 @@ class AuthService
     {
         $user = User::where('email', $data['email'])->first();
 
+        if (!$user) {
+            throw new Exception('Pengguna dengan email tersebut tidak ditemukan.', 404);
+        }
+
         $validOtp = OtpCode::where('user_id', $user->id)
             ->where('code', $data['otp'])
-            ->where('is_used', false)
             ->where('expires_at', '>=', now())
             ->first();
 
@@ -139,7 +147,7 @@ class AuthService
         }
 
         DB::transaction(function () use ($validOtp, $user, $data) {
-            $validOtp->update(['is_used' => true]);
+            $validOtp->delete();
             $user->update([
                 'password' => Hash::make($data['new_password'])
             ]);

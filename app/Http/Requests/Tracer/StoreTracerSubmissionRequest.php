@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Tracer;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTracerSubmissionRequest extends FormRequest
 {
@@ -23,7 +24,10 @@ class StoreTracerSubmissionRequest extends FormRequest
             'company_name' => ['required_if:status,bekerja', 'string', 'max:255'],
             'position' => ['required_if:status,bekerja', 'string', 'max:255'],
             'start_date' => ['required_if:status,bekerja', 'date'],
-            'is_linear' => ['required_if:status,bekerja,kuliah', 'boolean'],
+            'is_linear' => [
+                Rule::requiredIf(fn() => in_array($this->status, ['bekerja', 'kuliah'])),
+                'boolean'
+            ],
 
             'university_name' => ['required_if:status,kuliah', 'string', 'max:255'],
             'enrollment_date' => ['required_if:status,kuliah', 'date'],

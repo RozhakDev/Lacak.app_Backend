@@ -19,6 +19,10 @@ class ExportTracerController extends Controller
 
     public function export(Request $request)
     {
+        if (!$request->user() || !$request->user()->hasAnyRole(['Super Admin', 'Admin BKK'])) {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+
         $fileName = 'lacakapp-tracer-study-' . date('Ymd-His') . '.xlsx';
         
         $data = $this->exportService->getExportData();

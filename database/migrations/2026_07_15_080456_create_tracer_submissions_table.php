@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tracer_submissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('alumni_profile_id')->constrained('alumni_profiles')->cascadeOnDelete();
+            $table->foreignId('alumni_profile_id')->unique()->constrained('alumni_profiles')->cascadeOnDelete();
             $table->enum('status', ['bekerja', 'kuliah', 'wirausaha']);
             $table->timestamp('submitted_at')->useCurrent();
             $table->timestamps();

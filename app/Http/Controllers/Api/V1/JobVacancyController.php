@@ -75,7 +75,9 @@ class JobVacancyController extends Controller
         $formatted = $applications->through(function ($app) {
             return [
                 'id' => $app->id,
-                'job_vacancy' => new JobVacancyResource($app->jobVacancy),
+                'job_vacancy' => $app->jobVacancy 
+                    ? new JobVacancyResource($app->jobVacancy) 
+                    : ['id' => null, 'title' => '[Lowongan telah dihapus]'],
                 'status' => $app->status,
                 'cv_url' => asset('storage/' . $app->cv_url),
                 'cover_letter' => $app->cover_letter,

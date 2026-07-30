@@ -22,8 +22,8 @@ class HealthCheckController extends Controller
     public function index(): JsonResponse
     {
         return $this->successResponse('Lacak.app API is up and running!', [
-            'php_version' => phpversion(),
-            'laravel_version' => app()->version(),
+            'php_version' => app()->isProduction() ? 'hidden' : phpversion(),
+            'laravel_version' => app()->isProduction() ? 'hidden' : app()->version(),
             'environment' => app()->environment(),
         ]);
     }

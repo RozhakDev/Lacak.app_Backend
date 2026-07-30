@@ -15,7 +15,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'nisn' => ['required', 'string', 'unique:users,nisn'],
+            'nisn' => ['nullable', 'string', 'digits:10', 'unique:users,nisn'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'school_id' => ['required', 'exists:schools,id'],

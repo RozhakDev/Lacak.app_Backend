@@ -6,6 +6,8 @@ use App\Models\JobVacancy;
 use App\Models\JobApplication;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use Exception;
 
@@ -74,13 +76,24 @@ class JobVacancyService
 
         $cvPath = $cvFile->store('job_applications/cv', 'public');
 
-        return JobApplication::create([
-            'job_vacancy_id' => $jobId,
-            'user_id' => $userId,
-            'cv_url' => $cvPath,
-            'cover_letter' => $coverLetter,
-            'status' => 'pending'
-        ]);
+        try {
+            return JobApplication::create([
+                'job_vacancy_id' => $jobId,
+                'user_id' => $userId,
+                'cv_url' => $cvPath,
+                'cover_letter' => $coverLetter,
+                'status' => 'pending'
+            ]);
+        } catch (QueryException $e) {
+            Storage::disk('public')->delete($cvPath);
+            
+            $errorCode = $e->errorInfo[1] ?? 0;
+            if ($errorCode == 1062 || str_contains($e->getMessage(), 'unique')) {
+                throw new Exception('Anda sudah melamar pekerjaan ini sebelumnya.', 400);
+            }
+            
+            throw $e;
+        }
     }
 
     public function getMyApplications(int $userId, int $perPage = 10): LengthAwarePaginator

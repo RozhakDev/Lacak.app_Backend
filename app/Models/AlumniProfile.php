@@ -38,9 +38,9 @@ class AlumniProfile extends Model
         return $this->belongsTo(MasterMajor::class, 'major_id');
     }
 
-    public function tracerSubmissions()
+    public function tracerSubmission()
     {
-        return $this->hasMany(TracerSubmission::class);
+        return $this->hasOne(TracerSubmission::class);
     }
 
     public function experiences()

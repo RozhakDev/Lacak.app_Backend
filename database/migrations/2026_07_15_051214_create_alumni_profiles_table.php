@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('alumni_profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('major_id')->constrained('master_majors')->cascadeOnDelete();
+            $table->foreignId('major_id')->nullable()->constrained('master_majors')->nullOnDelete();
             $table->year('graduation_year');
             $table->string('phone_number')->nullable();
             $table->timestamps();

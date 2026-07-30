@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\School;
 use App\Models\MasterMajor;
 use App\Http\Resources\MasterMajorResource;
+use App\Http\Resources\SchoolResource;
 use Illuminate\Support\Facades\Cache;
 
 class MasterDataService
@@ -12,11 +13,10 @@ class MasterDataService
     public function getActiveSchools(): array
     {
         return Cache::rememberForever('master_schools_active', function () {
-            return School::where('is_active', true)
-                ->select('id', 'name')
+            $schools = School::where('is_active', true)
                 ->orderBy('name')
-                ->get()
-                ->toArray();
+                ->get();
+            return SchoolResource::collection($schools)->resolve();
         });
     }
 
@@ -25,8 +25,14 @@ class MasterDataService
         $tenantIdStr = $tenantId ?? 'guest';
         $cacheKey = "master_majors_{$tenantIdStr}";
 
-        return Cache::rememberForever($cacheKey, function () {
-            $majors = MasterMajor::orderBy('name', 'asc')->get();
+        return Cache::rememberForever($cacheKey, function () use ($tenantId) {
+            $query = MasterMajor::orderBy('name', 'asc');
+            
+            if ($tenantId) {
+                $query->where('school_id', $tenantId);
+            }
+            
+            $majors = $query->get();
             return MasterMajorResource::collection($majors)->resolve();
         });
     }

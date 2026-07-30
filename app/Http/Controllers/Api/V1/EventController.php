@@ -68,7 +68,7 @@ class EventController extends Controller
         $formatted = $participants->through(function ($participant) {
             return [
                 'id' => $participant->id,
-                'event' => new EventResource($participant->event),
+                'event' => $participant->event ? new EventResource($participant->event) : null,
                 'status' => $participant->status,
                 'registered_at' => $participant->created_at->format('Y-m-d H:i:s'),
             ];

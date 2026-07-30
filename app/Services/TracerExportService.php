@@ -8,7 +8,16 @@ class TracerExportService
 {
     public function getExportData(): array
     {
-        $submissions = TracerSubmission::with(['alumniProfile.user', 'alumniProfile.major', 'work', 'study', 'entrepreneur'])->cursor();
+        $user = auth()->user();
+        $query = TracerSubmission::with(['alumniProfile.user', 'alumniProfile.major', 'work', 'study', 'entrepreneur']);
+
+        if ($user && !$user->hasRole('Super Admin')) {
+            $query->whereHas('alumniProfile.user', function ($q) use ($user) {
+                $q->where('school_id', $user->school_id);
+            });
+        }
+
+        $submissions = $query->cursor();
 
         $data = [];
 

@@ -12,6 +12,7 @@ use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Requests\Auth\ResendOtpRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Exception;
 
 class AuthController extends Controller
@@ -29,7 +30,8 @@ class AuthController extends Controller
             $result = $this->authService->register($request->validated());
             return $this->successResponse('Pendaftaran berhasil. Silakan cek email Anda untuk kode verifikasi.', $result, 201);
         } catch (Exception $e) {
-            return $this->errorResponse('Pendaftaran gagal. Pastikan data yang dimasukkan sudah benar.', [$e->getMessage()], 500);
+            Log::error('Registration error: ' . $e->getMessage());
+            return $this->errorResponse('Pendaftaran gagal. Silakan coba lagi.', [], 500);
         }
     }
 
@@ -57,7 +59,8 @@ class AuthController extends Controller
             $result = $this->authService->generateOtp($request->validated()['email']);
             return $this->successResponse('Kode OTP berhasil dikirim. Silakan cek email Anda.', $result, 200);
         } catch (Exception $e) {
-            return $this->errorResponse('Gagal mengirim OTP. Silakan coba lagi nanti.', [$e->getMessage()], 500);
+            Log::error('Forgot password error: ' . $e->getMessage());
+            return $this->errorResponse('Gagal mengirim OTP. Silakan coba lagi nanti.', [], 500);
         }
     }
 
@@ -68,7 +71,8 @@ class AuthController extends Controller
             $result = $this->authService->generateOtp($data['email'], $data['context']);
             return $this->successResponse('OTP baru berhasil dikirim ke email Anda.', $result, 200);
         } catch (Exception $e) {
-            return $this->errorResponse('Gagal mengirim ulang OTP.', [$e->getMessage()], 500);
+            Log::error('Resend OTP error: ' . $e->getMessage());
+            return $this->errorResponse('Gagal mengirim ulang OTP.', [], 500);
         }
     }
 

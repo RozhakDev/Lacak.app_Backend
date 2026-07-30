@@ -48,6 +48,7 @@ Route::prefix('v1')->middleware('throttle:60,1')->group(function () {
         });
 
         Route::prefix('tracer')->group(function () {
+            Route::get('/submissions', [TracerController::class, 'show']);
             Route::post('/submissions', [TracerController::class, 'store']);
         });
 

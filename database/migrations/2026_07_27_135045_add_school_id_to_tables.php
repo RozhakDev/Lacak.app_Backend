@@ -25,6 +25,7 @@ return new class extends Migration
 
         Schema::table('master_majors', function (Blueprint $table) {
             $table->foreignId('school_id')->nullable()->after('id')->constrained('schools')->cascadeOnDelete();
+            $table->unique(['school_id', 'code']);
         });
     }
 

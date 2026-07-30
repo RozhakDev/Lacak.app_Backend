@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('code', 6);
             $table->timestamp('expires_at');
-            $table->boolean('is_used')->default(false);
             $table->timestamps();
             
             $table->index(['user_id', 'code']);

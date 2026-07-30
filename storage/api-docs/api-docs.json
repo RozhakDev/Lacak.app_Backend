@@ -572,6 +572,27 @@
             }
         },
         "/api/v1/tracer/submissions": {
+            "get": {
+                "tags": [
+                    "Tracer Study"
+                ],
+                "summary": "Lihat Riwayat Tracer Study Saya",
+                "description": "Mengambil data rekam jejak tracer study (pekerjaan, kuliah, atau wirausaha) yang pernah diisi oleh alumni yang sedang login.",
+                "operationId": "8c83ce9a6c3c4d4cc7427bebeb9e2c1e",
+                "responses": {
+                    "200": {
+                        "description": "Data tracer study berhasil diambil."
+                    },
+                    "404": {
+                        "description": "Alumni belum pernah mengisi tracer study atau profil belum lengkap."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
             "post": {
                 "tags": [
                     "Tracer Study"

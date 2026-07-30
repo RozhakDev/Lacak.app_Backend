@@ -263,6 +263,19 @@ class SwaggerDocs
     )]
     public function deleteExperience() {}
 
+    #[OA\Get(
+        path: "/api/v1/tracer/submissions",
+        summary: "Lihat Riwayat Tracer Study Saya",
+        description: "Mengambil data rekam jejak tracer study (pekerjaan, kuliah, atau wirausaha) yang pernah diisi oleh alumni yang sedang login.",
+        security: [["sanctum" => []]],
+        tags: ["Tracer Study"],
+        responses: [
+            new OA\Response(response: 200, description: "Data tracer study berhasil diambil."),
+            new OA\Response(response: 404, description: "Alumni belum pernah mengisi tracer study atau profil belum lengkap.")
+        ]
+    )]
+    public function getSubmission() {}
+
     #[OA\Post(
         path: "/api/v1/tracer/submissions",
         summary: "Kirim Kuesioner Tracer Study",
