@@ -16,9 +16,11 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Email;
 use MoonShine\UI\Fields\Password;
-use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
-use App\MoonShine\Resources\Role\RoleResource;
+use MoonShine\UI\Fields\Select;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\Permission\Models\Role;
+use Illuminate\Database\Eloquent\Model;
 use App\MoonShine\Resources\School\SchoolResource;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
@@ -39,11 +41,39 @@ class UserFormPage extends FormPage
                 Password::make('Password', 'password')
                     ->required()
                     ->canSee(fn(Password $field) => !request()->route('resourceItem')),
-                BelongsToMany::make('Hak Akses', 'roles', 'name', RoleResource::class)
-                    ->selectMode(),
+                Select::make('Hak Akses', 'primary_role')
+                    ->options(function () {
+                        $query = Role::query();
+                        if (!auth()->user()->hasRole('Super Admin')) {
+                            $query->where('name', '!=', 'Super Admin');
+                        }
+                        return $query->pluck('name', 'name')->toArray();
+                    })
+                    ->fill(fn($model) => $model?->roles?->first()?->name)
+                    ->onApply(fn(Model $item, $value) => $item)
+                    ->onAfterApply(function (Model $item, $value) {
+                        $item->syncRoles([$value]);
+                        return $item;
+                    })
+                    ->required(),
                 BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class)
-                    ->nullable()
-                    ->hint('Kosongkan untuk Super Admin (Bisa akses semua sekolah)'),
+                    ->nullable(fn() => auth()->user()->hasRole('Super Admin'))
+                    ->hint(auth()->user()->hasRole('Super Admin') ? 'Kosongkan untuk Super Admin (Bisa akses semua sekolah)' : 'Otomatis terikat dengan instansi Anda.')
+                    ->default(auth()->user()->school_id)
+                    ->valuesQuery(function (Builder $query) {
+                        if (!auth()->user()->hasRole('Super Admin')) {
+                            return $query->where('id', auth()->user()->school_id);
+                        }
+                        return $query;
+                    })
+                    ->onApply(function (Model $item, $value) {
+                        if (!auth()->user()->hasRole('Super Admin')) {
+                            $item->school_id = auth()->user()->school_id;
+                        } else {
+                            $item->school_id = empty($value) ? null : $value;
+                        }
+                        return $item;
+                    }),
             ]),
         ];
     }

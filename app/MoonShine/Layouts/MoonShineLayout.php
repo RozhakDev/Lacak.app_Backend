@@ -39,8 +39,9 @@ final class MoonShineLayout extends AppLayout
         return [
             MenuGroup::make('Administrasi', [
                MenuItem::make(UserResource::class, 'Pengguna (Users)')->icon('users'),
-               MenuItem::make(RoleResource::class, 'Hak Akses (Roles)')->icon('shield-check'),
-            ])->icon('users')->canSee(fn() => auth()->user()->hasRole('Super Admin')),
+               MenuItem::make(RoleResource::class, 'Hak Akses (Roles)')->icon('shield-check')
+                   ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
+            ])->icon('users'),
 
             MenuGroup::make('Data Master', [
                 MenuItem::make(SchoolResource::class, 'Profil Sekolah')->icon('building-library'),

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\Auth;
+use App\Models\JobVacancy;
+use App\Models\Event;
 
 class SchoolScope implements Scope
 {
@@ -14,7 +16,13 @@ class SchoolScope implements Scope
         if (Auth::hasUser()) {
             $user = Auth::user();
             if (!$user->hasRole('Super Admin')) {
-                $builder->where($model->getTable() . '.school_id', $user->school_id);
+                $builder->where(function($query) use ($model, $user) {
+                    $query->where($model->getTable() . '.school_id', $user->school_id);
+                    
+                    if ($model instanceof JobVacancy || $model instanceof Event) {
+                        $query->orWhereNull($model->getTable() . '.school_id');
+                    }
+                });
             }
         }
     }

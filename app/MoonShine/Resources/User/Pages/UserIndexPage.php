@@ -13,9 +13,7 @@ use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Email;
-use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
-use App\MoonShine\Resources\Role\RoleResource;
 use App\MoonShine\Resources\School\SchoolResource;
 use App\MoonShine\Resources\User\UserResource;
 use MoonShine\Support\ListOf;
@@ -34,7 +32,7 @@ class UserIndexPage extends IndexPage
             Text::make('NISN', 'nisn')->sortable(),
             BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class)
                 ->canSee(fn() => auth()->user()->hasRole('Super Admin')),
-            BelongsToMany::make('Hak Akses', 'roles', 'name', RoleResource::class)
+            Text::make('Hak Akses', 'roles_display', fn($u) => $u->roles->first()?->name ?? '-')
                 ->badge('purple'),
         ];
     }

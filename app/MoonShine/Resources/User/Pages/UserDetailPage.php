@@ -13,9 +13,7 @@ use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Email;
-use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
-use App\MoonShine\Resources\Role\RoleResource;
 use App\MoonShine\Resources\School\SchoolResource;
 use Throwable;
 
@@ -29,7 +27,7 @@ class UserDetailPage extends DetailPage
             Email::make('Email', 'email'),
             Text::make('NISN', 'nisn'),
             BelongsTo::make('Sekolah', 'school', 'name', SchoolResource::class),
-            BelongsToMany::make('Hak Akses', 'roles', 'name', RoleResource::class)
+            Text::make('Hak Akses', 'roles_display', fn($u) => $u->roles->first()?->name ?? '-')
                 ->badge('purple'),
         ];
     }

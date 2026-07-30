@@ -39,10 +39,31 @@ class UserResource extends ModelResource
         ];
     }
     
-    protected function beforeSaving(DataWrapperContract $item): DataWrapperContract
+    protected function beforeCreating(DataWrapperContract $item): DataWrapperContract
     {
         $model = $item->getOriginal();
-        
+        $user = auth()->user();
+
+        if (!$user->hasRole('Super Admin')) {
+            $model->school_id = $user->school_id;
+        }
+
+        if (request()->filled('password')) {
+            $model->password = Hash::make(request()->input('password'));
+        }
+
+        return $item;
+    }
+
+    protected function beforeUpdating(DataWrapperContract $item): DataWrapperContract
+    {
+        $model = $item->getOriginal();
+        $user = auth()->user();
+
+        if (!$user->hasRole('Super Admin')) {
+            $model->school_id = $user->school_id;
+        }
+
         if (request()->filled('password')) {
             $model->password = Hash::make(request()->input('password'));
         } else {
