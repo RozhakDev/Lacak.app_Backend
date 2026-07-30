@@ -127,6 +127,30 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'api' => [
+            'driver'            => 'daily',
+            'path'              => storage_path('logs/api/api.log'),
+            'level'             => env('LOG_LEVEL', 'debug'),
+            'days'              => 30,
+            'replace_placeholders' => true,
+        ],
+
+        'auth' => [
+            'driver'            => 'daily',
+            'path'              => storage_path('logs/auth/auth.log'),
+            'level'             => env('LOG_LEVEL', 'debug'),
+            'days'              => 90,
+            'replace_placeholders' => true,
+        ],
+
+        'export' => [
+            'driver'            => 'daily',
+            'path'              => storage_path('logs/export/export.log'),
+            'level'             => env('LOG_LEVEL', 'debug'),
+            'days'              => 90,
+            'replace_placeholders' => true,
+        ],
+
     ],
 
 ];

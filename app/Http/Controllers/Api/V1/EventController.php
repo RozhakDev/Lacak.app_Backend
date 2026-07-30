@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Services\EventService;
 use App\Http\Resources\EventResource;
+use App\Support\AppLogger;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -24,12 +25,15 @@ class EventController extends Controller
         try {
             $search = $request->query('search');
             $events = $this->eventService->getActiveEvents($search);
-
             $response = EventResource::collection($events);
 
             return $this->paginatedResponse('Daftar kegiatan berhasil dimuat.', $response);
         } catch (Exception $e) {
-            return $this->errorResponse('Gagal memuat daftar kegiatan.', [$e->getMessage()], 500);
+            AppLogger::api()->error('Gagal memuat daftar kegiatan.', AppLogger::context([
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]));
+            return $this->errorResponse('Gagal memuat daftar kegiatan.', [], 500);
         }
     }
 
@@ -41,7 +45,12 @@ class EventController extends Controller
         } catch (ModelNotFoundException $e) {
             return $this->errorResponse($e->getMessage(), [], 404);
         } catch (Exception $e) {
-            return $this->errorResponse('Terjadi kesalahan sistem.', [$e->getMessage()], 500);
+            AppLogger::api()->error('Gagal memuat detail kegiatan.', AppLogger::context([
+                'event_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]));
+            return $this->errorResponse('Terjadi kesalahan sistem.', [], 500);
         }
     }
 
@@ -50,6 +59,11 @@ class EventController extends Controller
         try {
             $participant = $this->eventService->registerEvent((int) $id, auth()->id());
 
+            AppLogger::api()->info('Alumni berhasil mendaftar kegiatan.', AppLogger::context([
+                'event_id' => $id,
+                'participant_id' => $participant->id,
+            ]));
+
             return $this->successResponse('Berhasil mendaftar kegiatan.', [
                 'event_id' => $participant->event_id,
                 'status' => $participant->status,
@@ -57,6 +71,10 @@ class EventController extends Controller
         } catch (ModelNotFoundException $e) {
             return $this->errorResponse($e->getMessage(), [], 404);
         } catch (Exception $e) {
+            AppLogger::api()->warning('Pendaftaran kegiatan ditolak.', AppLogger::context([
+                'event_id' => $id,
+                'reason' => $e->getMessage(),
+            ]));
             return $this->errorResponse($e->getMessage(), [], 400);
         }
     }
