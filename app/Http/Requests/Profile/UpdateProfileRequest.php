@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
+use \Illuminate\Validation\Rule;
 
 class UpdateProfileRequest extends FormRequest
 {
@@ -14,7 +15,13 @@ class UpdateProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'major_id' => ['required', 'integer', 'exists:master_majors,id'],
+            'major_id' => [
+                'required', 
+                'integer', 
+                Rule::exists('master_majors', 'id')->where(function ($query) {
+                    $query->where('school_id', request()->user()->school_id);
+                })
+            ],
             'graduation_year' => ['required', 'integer', 'min:2000', 'max:' . (date('Y') + 1)],
             'phone_number' => ['required', 'string', 'min:10', 'max:15'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],

@@ -9,6 +9,17 @@ use Exception;
 
 class AlumniExperienceService
 {
+    public function getExperiences(User $user)
+    {
+        $profile = $user->alumniProfile;
+
+        if (!$profile) {
+            throw new Exception('Silakan lengkapi profil utama Anda terlebih dahulu.', 400);
+        }
+
+        return $profile->experiences()->orderBy('start_date', 'desc')->get();
+    }
+
     public function storeExperience(User $user, array $data): AlumniExperience
     {
         $profile = $user->alumniProfile;

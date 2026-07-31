@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasSchoolScope;
+use \App\Models\Scopes\SchoolScope;
 
 class JobVacancy extends Model
 {
@@ -33,7 +34,7 @@ class JobVacancy extends Model
 
     public function creator()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by')->withoutGlobalScope(SchoolScope::class);
     }
 
     public function jobApplications()

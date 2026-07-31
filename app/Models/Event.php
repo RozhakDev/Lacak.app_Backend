@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasSchoolScope;
+use \Illuminate\Support\Str;
+use \App\Models\Scopes\SchoolScope;
 
 class Event extends Model
 {
@@ -17,7 +19,7 @@ class Event extends Model
                 $model->created_by = auth()->id();
             }
             if (empty($model->slug)) {
-                $model->slug = \Illuminate\Support\Str::slug($model->title) . '-' . uniqid();
+                $model->slug = Str::slug($model->title) . '-' . uniqid();
             }
         });
     }
@@ -45,7 +47,7 @@ class Event extends Model
 
     public function creator()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by')->withoutGlobalScope(SchoolScope::class);
     }
 
     public function participants()

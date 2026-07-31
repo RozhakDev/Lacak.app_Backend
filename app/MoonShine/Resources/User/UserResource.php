@@ -52,6 +52,10 @@ class UserResource extends ModelResource
             $model->password = Hash::make(request()->input('password'));
         }
 
+        if (empty($model->email_verified_at)) {
+            $model->email_verified_at = now();
+        }
+
         return $item;
     }
 

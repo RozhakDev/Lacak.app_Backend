@@ -22,6 +22,16 @@ class AlumniExperienceController extends Controller
         $this->experienceService = $experienceService;
     }
 
+    public function index(Request $request): JsonResponse
+    {
+        try {
+            $experiences = $this->experienceService->getExperiences($request->user());
+            return $this->successResponse('Daftar pengalaman berhasil dimuat.', AlumniExperienceResource::collection($experiences));
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), [], $e->getCode() ?: 400);
+        }
+    }
+
     public function store(StoreAlumniExperienceRequest $request): JsonResponse
     {
         try {

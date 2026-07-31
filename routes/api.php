@@ -41,6 +41,7 @@ Route::prefix('v1')->middleware('throttle:60,1')->group(function () {
             Route::post('/', [ProfileController::class, 'update']);
             
             Route::prefix('experiences')->group(function () {
+                Route::get('/', [AlumniExperienceController::class, 'index']);
                 Route::post('/', [AlumniExperienceController::class, 'store']);
                 Route::put('/{id}', [AlumniExperienceController::class, 'update']);
                 Route::delete('/{id}', [AlumniExperienceController::class, 'destroy']);

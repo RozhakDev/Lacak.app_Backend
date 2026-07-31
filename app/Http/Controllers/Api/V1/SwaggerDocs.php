@@ -197,6 +197,18 @@ class SwaggerDocs
     )]
     public function updateProfile() {}
 
+    #[OA\Get(
+        path: "/api/v1/profile/experiences",
+        summary: "Daftar Pengalaman",
+        description: "Mengambil senarai (list) seluruh pengalaman yang telah ditambahkan oleh user. Berguna jika frontend hanya ingin me-refresh daftar pengalaman tanpa me-reload seluruh profil.",
+        security: [["sanctum" => []]],
+        tags: ["Alumni Experience"],
+        responses: [
+            new OA\Response(response: 200, description: "Daftar pengalaman berhasil dimuat.")
+        ]
+    )]
+    public function getExperiences() {}
+
     #[OA\Post(
         path: "/api/v1/profile/experiences",
         summary: "Tambahkan Pengalaman Baru",
@@ -321,6 +333,16 @@ class SwaggerDocs
         summary: "Daftar Master Konsentrasi Jurusan",
         description: "Menampilkan senarai referensi statis untuk atribut Jurusan di SMK (contoh: TKJ, RPL, TKR). Diperuntukkan sebagai pengisi opsi dropdown pada Frontend.",
         tags: ["Master Data"],
+        security: [["sanctum" => []]],
+        parameters: [
+            new OA\Parameter(
+                name: "school_id",
+                in: "query",
+                required: false,
+                description: "ID Sekolah untuk memfilter jurusan (jika diakses oleh Guest). Akan diabaikan jika user mengirimkan Token karena sistem otomatis membaca ID dari token.",
+                schema: new OA\Schema(type: "integer", example: 4)
+            )
+        ],
         responses: [
             new OA\Response(response: 200, description: "Sukses mengembalikan matriks daftar jurusan.")
         ]

@@ -22,15 +22,15 @@ class MasterDataService
 
     public function getMajors(?int $tenantId): array
     {
-        $tenantIdStr = $tenantId ?? 'guest';
-        $cacheKey = "master_majors_{$tenantIdStr}";
+        if (!$tenantId) {
+            return [];
+        }
+
+        $cacheKey = "master_majors_{$tenantId}";
 
         return Cache::rememberForever($cacheKey, function () use ($tenantId) {
             $query = MasterMajor::orderBy('name', 'asc');
-            
-            if ($tenantId) {
-                $query->where('school_id', $tenantId);
-            }
+            $query->where('school_id', $tenantId);
             
             $majors = $query->get();
             return MasterMajorResource::collection($majors)->resolve();
