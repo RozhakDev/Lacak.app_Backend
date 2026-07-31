@@ -19,22 +19,22 @@ class OtpTest extends TestCase
         Mail::fake();
     }
 
-    public function test_generating_new_otp_deletes_all_previous_otps(): void
+    public function test_generating_new_otp_deletes_expired_otps_only(): void
     {
         $user = User::factory()->unverified()->create([
             'email' => 'otpuser@example.com',
         ]);
 
-        $oldOtp1 = OtpCode::factory()->create(['user_id' => $user->id, 'code' => '111111']);
-        $oldOtp2 = OtpCode::factory()->create(['user_id' => $user->id, 'code' => '222222']);
+        $expiredOtp = OtpCode::factory()->expired()->create(['user_id' => $user->id, 'code' => '111111']);
+        $validOtp = OtpCode::factory()->create(['user_id' => $user->id, 'code' => '222222']);
 
         $authService = app(AuthService::class);
         $authService->generateOtp($user->email, 'verify');
 
-        $this->assertDatabaseMissing('otp_codes', ['id' => $oldOtp1->id]);
-        $this->assertDatabaseMissing('otp_codes', ['id' => $oldOtp2->id]);
+        $this->assertDatabaseMissing('otp_codes', ['id' => $expiredOtp->id]);
+        $this->assertDatabaseHas('otp_codes', ['id' => $validOtp->id]);
 
-        $this->assertDatabaseCount('otp_codes', 1);
+        $this->assertDatabaseCount('otp_codes', 2);
     }
 
     public function test_valid_otp_verification_succeeds_and_deletes_otp(): void

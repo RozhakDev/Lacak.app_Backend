@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasRelatedSchoolScope;
 
 class JobApplication extends Model
 {
-    use HasRelatedSchoolScope;
+    use HasFactory, HasRelatedSchoolScope;
 
     protected $fillable = [
         'job_vacancy_id',
