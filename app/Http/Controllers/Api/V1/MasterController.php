@@ -25,8 +25,11 @@ class MasterController extends Controller
 
     public function getMajors(): JsonResponse
     {
-        $tenantId = request()->input('school_id') 
-            ?? (auth('sanctum')->check() ? auth('sanctum')->user()->school_id : null);
+        if (auth('sanctum')->check()) {
+            $tenantId = auth('sanctum')->user()->school_id;
+        } else {
+            $tenantId = request()->input('school_id');
+        }
         
         return $this->successResponse(
             'Daftar jurusan berhasil dimuat.', 

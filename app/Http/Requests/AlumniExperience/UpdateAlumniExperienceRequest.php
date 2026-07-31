@@ -3,6 +3,7 @@
 namespace App\Http\Requests\AlumniExperience;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateAlumniExperienceRequest extends FormRequest
 {
@@ -18,7 +19,12 @@ class UpdateAlumniExperienceRequest extends FormRequest
             'position' => ['sometimes', 'required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:2000'],
             'start_date' => ['sometimes', 'required', 'date'],
-            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'end_date' => [
+                'nullable', 
+                'date', 
+                'after_or_equal:start_date',
+                Rule::prohibitedIf(fn() => $this->boolean('is_current')),
+            ],
             'is_current' => ['boolean'],
         ];
     }

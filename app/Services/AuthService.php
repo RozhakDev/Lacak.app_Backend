@@ -75,7 +75,9 @@ class AuthService
             throw new Exception('Akun ini sudah diverifikasi.', 400);
         }
 
-        OtpCode::where('user_id', $user->id)->delete();
+        OtpCode::where('user_id', $user->id)
+            ->where('expires_at', '<', now())
+            ->delete();
 
         $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
         

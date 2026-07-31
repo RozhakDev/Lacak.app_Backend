@@ -19,7 +19,9 @@ class ExportTracerController extends Controller
 
     public function export(Request $request)
     {
-        if (!$request->user() || !$request->user()->hasAnyRole(['Super Admin', 'Admin BKK'])) {
+        $user = auth('moonshine')->check() ? auth('moonshine')->user() : auth()->user();
+
+        if (!$user || !$user->hasAnyRole(['Super Admin', 'Admin BKK'])) {
             AppLogger::export()->warning('Akses export tidak sah ditolak.', AppLogger::context());
             return response()->json(['message' => 'Unauthorized action.'], 403);
         }
@@ -32,8 +34,8 @@ class ExportTracerController extends Controller
             AppLogger::export()->info('Export Tracer Study berhasil diunduh.', AppLogger::context([
                 'filename' => $fileName,
                 'row_count' => count($data) - 1,
-                'school_id' => $request->user()->school_id,
-                'role' => $request->user()->getRoleNames()->first(),
+                'school_id' => $user->school_id,
+                'role' => $user->getRoleNames()->first(),
             ]));
 
             return response((string) $xlsx, 200, [

@@ -79,9 +79,6 @@ class EventService
     public function getMyEvents(int $userId, int $perPage = 10): LengthAwarePaginator
     {
         return EventParticipant::with('event.creator')
-            ->whereHas('event', function ($query) {
-                $query->where('is_active', true);
-            })
             ->where('user_id', $userId)
             ->latest()
             ->paginate($perPage);

@@ -74,9 +74,9 @@ class TracerService
                 ]
             );
 
-            $submission->work()->delete();
-            $submission->study()->delete();
-            $submission->entrepreneur()->delete();
+            $submission->work()->withoutGlobalScopes()->delete();
+            $submission->study()->withoutGlobalScopes()->delete();
+            $submission->entrepreneur()->withoutGlobalScopes()->delete();
 
             switch ($data['status']) {
                 case 'bekerja':

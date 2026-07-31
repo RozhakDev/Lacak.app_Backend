@@ -12,7 +12,7 @@ class TracerSubmissionResource extends JsonResource
         return [
             'id' => $this->id,
             'status' => $this->status,
-            'submitted_at' => $this->submitted_at,
+            'submitted_at' => $this->submitted_at?->format('Y-m-d H:i:s'),
 
             'detail_bekerja' => $this->when($this->status === 'bekerja', $this->work),
             'detail_kuliah' => $this->when($this->status === 'kuliah', $this->study),
