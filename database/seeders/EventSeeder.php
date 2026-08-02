@@ -42,7 +42,7 @@ class EventSeeder extends Seeder
             'SMKN2' => [
                 [
                     'title' => 'Seminar Kewirausahaan & Strategi Pemasaran Digital',
-                    'event_type' => 'seminar',
+                    'event_type' => 'training',
                     'location_type' => 'offline',
                     'location_details' => 'Aula SMKN 2',
                     'description' => 'Strategi berjualan di platform e-commerce dan social media marketing.',
