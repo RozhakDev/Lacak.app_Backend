@@ -2,13 +2,13 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Lacak.app API Documentation",
-        "description": "Dokumentasi REST API untuk Lacak.app Backend",
+        "description": "Dokumentasi resmi REST API Lacak.app untuk pengelolaan data Tracer Study, Bursa Kerja Khusus (BKK), dan Layanan Alumni SMK.",
         "version": "1.0.0"
     },
     "servers": [
         {
             "url": "/",
-            "description": "API Server (Dynamic Host)"
+            "description": "Production / Active Host Server"
         }
     ],
     "paths": {
@@ -996,7 +996,7 @@
         "securitySchemes": {
             "sanctum": {
                 "type": "http",
-                "description": "Masukkan token Sanctum yang didapatkan dari proses Login.",
+                "description": "Masukkan Token Sanctum Anda (Contoh: `1|AbCdEfGhIjK...`). Dapatkan token melalui endpoint `POST /api/v1/auth/login`.",
                 "bearerFormat": "JWT",
                 "scheme": "bearer"
             }

@@ -7,19 +7,19 @@ use OpenApi\Attributes as OA;
 
 #[OA\Info(
     version: "1.0.0",
-    description: "Dokumentasi REST API untuk Lacak.app Backend",
-    title: "Lacak.app API Documentation"
+    title: "Lacak.app API Documentation",
+    description: "Dokumentasi resmi REST API Lacak.app untuk pengelolaan data Tracer Study, Bursa Kerja Khusus (BKK), dan Layanan Alumni SMK."
 )]
 #[OA\Server(
     url: "/",
-    description: "API Server (Dynamic Host)"
+    description: "Production / Active Host Server"
 )]
 #[OA\SecurityScheme(
     securityScheme: "sanctum",
     type: "http",
     scheme: "bearer",
     bearerFormat: "JWT",
-    description: "Masukkan token Sanctum yang didapatkan dari proses Login."
+    description: "Masukkan Token Sanctum Anda (Contoh: `1|AbCdEfGhIjK...`). Dapatkan token melalui endpoint `POST /api/v1/auth/login`."
 )]
 abstract class Controller
 {
